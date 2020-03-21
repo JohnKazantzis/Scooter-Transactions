@@ -7,3 +7,5 @@
 - Added the Rates cmp
 - Added react router to navigate between components
 - Moved functionality from App cmp to Rates cmp
+- Changed the render() method of the App cmp => Now it only renders the
+  balance of the wallet's account

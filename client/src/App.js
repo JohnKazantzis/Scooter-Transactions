@@ -13,6 +13,7 @@ import deployedContract from './contracts/scooterTransactions.json';
 
 class App extends React.Component {
     state = {
+        walletBalance: null,
         contractInstance: null,
         accounts: null,
         contractAddr: null,
@@ -44,8 +45,16 @@ class App extends React.Component {
         );
         console.log(contractInstance);
 
+        let walletBalance = await web3.eth.getBalance(accounts[0]);
+        walletBalance = web3.utils.fromWei(walletBalance);
+
         // Setting the state
-        this.setState({ contractInstance: contractInstance, accounts: accounts, contractAddr: contractAdrr });
+        this.setState({
+            contractInstance: contractInstance,
+            accounts: accounts,
+            contractAddr: contractAdrr,
+            walletBalance: walletBalance
+        });
 
         this.getTotalBalance();
 
@@ -83,7 +92,7 @@ class App extends React.Component {
                 <Switch>
                     <Route path='/' exact>
                         <div>
-                            Balance: {this.state.totalBalance}<br /><br />
+                            Balance: {this.state.walletBalance} ETH<br /><br />
                             <Link to='/rates'>
                                 <button> Get Exchange Rates </button>
                             </Link>
