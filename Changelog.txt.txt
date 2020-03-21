@@ -1,0 +1,6 @@
+	UPDATES
+
+> 21/3/20
+- Added an API request to the coinlayer API. The results are logged
+  in the console for now
+- The request is triggered by the button 'Get Exchange Rates'

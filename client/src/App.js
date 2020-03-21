@@ -1,5 +1,6 @@
 import React from 'react';
 import Web3 from 'web3';
+import axios from 'axios';
 
 // Importing the Contract's artifact
 import deployedContract from './contracts/scooterTransactions.json';
@@ -9,7 +10,8 @@ class App extends React.Component {
         accounts: null,
         contractAddr: null,
         totalBalance: 0,
-        paymentAmount: 0 };
+        paymentAmount: 0
+    };
 
     componentDidMount = async () => {
         
@@ -71,20 +73,38 @@ class App extends React.Component {
     handleChange = event => {
         this.setState({paymentAmount: event.target.value});
     }
+
+    getExchangeRates = async event => {
+        const COINLAYER_URL = 'http://api.coinlayer.com/live';
+        const COINLAYER_API_KEY = process.env.REACT_APP_COINLAYER_API_KEY;
+        const coin = 'EUR';
+
+        const params = { access_key: COINLAYER_API_KEY, target: coin };
+
+        const response = await axios.get(COINLAYER_URL, {params});
+        console.log(response);
+
+    }
      
 
     render() {
         return (
             <div>
-                <h1>Scooter Transactions</h1>
-                <h4>Balance: {this.state.totalBalance}</h4>
-                <form onSubmit={this.makePayment}>
-                    <label>
-                    Payment Amount:&nbsp;&nbsp;
-                    <input type="number" value={this.state.paymentAmount} onChange={this.handleChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                </form>
+                <div>
+                    <h1>Wallet</h1>
+                    <h4>Balance: {this.state.totalBalance}</h4>
+                    <form onSubmit={this.makePayment}>
+                        <label>
+                        Payment Amount:&nbsp;&nbsp;
+                        <input type="number" value={this.state.paymentAmount} onChange={this.handleChange} />
+                        </label>
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+                <br/>
+                <div>
+                    <button onClick={this.getExchangeRates}>Get Exchange Rates</button>
+                </div>
             </div>
         );
     }
