@@ -1,12 +1,19 @@
 import React from 'react';
 import Web3 from 'web3';
-import axios from 'axios';
+import Rates from './Rates';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
 
 // Importing the Contract's artifact
 import deployedContract from './contracts/scooterTransactions.json';
 
 class App extends React.Component {
-    state = { contractInstance: null,
+    state = {
+        contractInstance: null,
         accounts: null,
         contractAddr: null,
         totalBalance: 0,
@@ -31,11 +38,6 @@ class App extends React.Component {
         console.log(netId);
         console.log(contractAdrr);
 
-        // Creating a new contract instance to be able interact with it
-        // const contractInstance = new web3.eth.Contract(
-        //     deployedContract.abi,
-        //     netId && contractAdrr,
-        // );
         const contractInstance = new web3.eth.Contract(
             deployedContract.abi,
             contractAdrr
@@ -73,41 +75,28 @@ class App extends React.Component {
     handleChange = event => {
         this.setState({paymentAmount: event.target.value});
     }
-
-    getExchangeRates = async event => {
-        const COINLAYER_URL = 'http://api.coinlayer.com/live';
-        const COINLAYER_API_KEY = process.env.REACT_APP_COINLAYER_API_KEY;
-        const coin = 'EUR';
-
-        const params = { access_key: COINLAYER_API_KEY, target: coin };
-
-        const response = await axios.get(COINLAYER_URL, {params});
-        console.log(response);
-
-    }
      
 
     render() {
         return (
-            <div>
-                <div>
-                    <h1>Wallet</h1>
-                    <h4>Balance: {this.state.totalBalance}</h4>
-                    <form onSubmit={this.makePayment}>
-                        <label>
-                        Payment Amount:&nbsp;&nbsp;
-                        <input type="number" value={this.state.paymentAmount} onChange={this.handleChange} />
-                        </label>
-                        <input type="submit" value="Submit" />
-                    </form>
-                </div>
-                <br/>
-                <div>
-                    <button onClick={this.getExchangeRates}>Get Exchange Rates</button>
-                </div>
-            </div>
+            <Router>
+                <Switch>
+                    <Route path='/' exact>
+                        <div>
+                            Balance: {this.state.totalBalance}<br /><br />
+                            <Link to='/rates'>
+                                <button> Get Exchange Rates </button>
+                            </Link>
+                        </div>
+                    </Route>
+                    <Route path='/rates'>
+                        <Rates />
+                    </Route>
+                </Switch>
+            </Router>
         );
     }
 }
 
 export default App;
+

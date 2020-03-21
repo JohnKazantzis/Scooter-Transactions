@@ -4,3 +4,6 @@
 - Added an API request to the coinlayer API. The results are logged
   in the console for now
 - The request is triggered by the button 'Get Exchange Rates'
+- Added the Rates cmp
+- Added react router to navigate between components
+- Moved functionality from App cmp to Rates cmp
