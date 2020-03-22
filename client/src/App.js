@@ -1,6 +1,7 @@
 import React from 'react';
 import Web3 from 'web3';
 import Rates from './Rates';
+import Deposit from './Deposit';
 import {
     BrowserRouter as Router,
     Switch,
@@ -93,6 +94,9 @@ class App extends React.Component {
                     <Route path='/' exact>
                         <div>
                             Balance: {this.state.walletBalance} ETH<br /><br />
+                            <Link to='/deposit'>
+                                <button> Make A Deposit </button>
+                            </Link>
                             <Link to='/rates'>
                                 <button> Get Exchange Rates </button>
                             </Link>
@@ -100,6 +104,9 @@ class App extends React.Component {
                     </Route>
                     <Route path='/rates'>
                         <Rates />
+                    </Route>
+                    <Route path='/deposit'>
+                        <Deposit />
                     </Route>
                 </Switch>
             </Router>
