@@ -13,3 +13,8 @@
 > 22/3/20
 - Added the Deposit cmp and links to it
 - Added back buttons with link to '/' in both Deposit and Rates cmps
+
+> 23/3/20
+- Added transferMoneyToAccount and transferMoneyToContract cmps
+- Added Routes - Links to them
+- Created the state of the Deposit cmp

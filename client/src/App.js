@@ -2,6 +2,8 @@ import React from 'react';
 import Web3 from 'web3';
 import Rates from './Rates';
 import Deposit from './Deposit';
+import TransferMoneyToAccount from './TransferMoneyToAccount';
+import TransferMoneyToContract from './TransferMoneyToContract';
 import {
     BrowserRouter as Router,
     Switch,
@@ -81,11 +83,7 @@ class App extends React.Component {
         
         this.getTotalBalance();
     }
-
-    handleChange = event => {
-        this.setState({paymentAmount: event.target.value});
-    }
-     
+         
 
     render() {
         return (
@@ -100,6 +98,12 @@ class App extends React.Component {
                             <Link to='/rates'>
                                 <button> Get Exchange Rates </button>
                             </Link>
+                            <Link to='/TransferMoneyToContract'>
+                                <button> Transfer Money To Contract </button>
+                            </Link>
+                            <Link to='/TransferMoneyToAccount'>
+                                <button> Transfer Money To Account </button>
+                            </Link>
                         </div>
                     </Route>
                     <Route path='/rates'>
@@ -107,6 +111,12 @@ class App extends React.Component {
                     </Route>
                     <Route path='/deposit'>
                         <Deposit />
+                    </Route>
+                    <Route path='/TransferMoneyToContract'>
+                        <TransferMoneyToContract />
+                    </Route>
+                    <Route path='/TransferMoneyToAccount'>
+                        <TransferMoneyToAccount />
                     </Route>
                 </Switch>
             </Router>
