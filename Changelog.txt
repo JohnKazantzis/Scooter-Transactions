@@ -26,3 +26,7 @@
 - Added controlled inputs to the transferMoneyToAccount cmp
 - Added handleChange() and handleSubmit() methods to the Deposit
   and transferMoneyToAccount cmps
+- The transferMoneyToAccount cmp now sends money from the default account
+  to another account according to the input (for now its the second account to 
+  check the functionality). The new balances of the accounts are logged in the
+  console

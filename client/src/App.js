@@ -16,6 +16,7 @@ import deployedContract from './contracts/scooterTransactions.json';
 
 class App extends React.Component {
     state = {
+        web3instance: null,
         walletBalance: null,
         contractInstance: null,
         accounts: null,
@@ -56,7 +57,8 @@ class App extends React.Component {
             contractInstance: contractInstance,
             accounts: accounts,
             contractAddr: contractAdrr,
-            walletBalance: walletBalance
+            walletBalance: walletBalance,
+            web3instance: web3
         });
 
         this.getTotalBalance();
@@ -116,7 +118,7 @@ class App extends React.Component {
                         <TransferMoneyToContract />
                     </Route>
                     <Route path='/TransferMoneyToAccount'>
-                        <TransferMoneyToAccount />
+                        <TransferMoneyToAccount instance={this.state.web3instance} />
                     </Route>
                 </Switch>
             </Router>

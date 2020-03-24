@@ -16,8 +16,34 @@ class TransferMoneyToAccount extends React.Component {
         }       
     }
 
-    handleSubmit = event => {
+    handleSubmit = async (event, props) => {
+        event.preventDefault();
         console.log('Transfer to Account Submitted')
+        console.log(this.props.instance);
+
+        const web3 = this.props.instance;
+        const accounts = await web3.eth.getAccounts();
+        console.log(accounts);
+
+        // Send Money
+        this.setState({ address: accounts[1] });
+        await web3.eth.sendTransaction({
+            from: accounts[0],
+            to: this.state.address,
+            value: this.state.amount
+        });
+
+        // Get Wallet Balance
+        let walletBalance = await web3.eth.getBalance(accounts[0]);
+        walletBalance = web3.utils.fromWei(walletBalance);
+        console.log(walletBalance);
+
+        let walletBalance1 = await web3.eth.getBalance(accounts[1]);
+        walletBalance1 = web3.utils.fromWei(walletBalance1);
+        console.log(walletBalance1);
+
+
+
     }
 
     render() {
@@ -36,8 +62,6 @@ class TransferMoneyToAccount extends React.Component {
                 <Link to='/'>
                     <button> Back </button>
                 </Link>
-                {this.state.address}
-                {this.state.amount}
             </div>
         );
     }
