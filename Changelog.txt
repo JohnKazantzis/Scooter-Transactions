@@ -30,3 +30,7 @@
   to another account according to the input (for now its the second account to 
   check the functionality). The new balances of the accounts are logged in the
   console
+- Implemented the Deposit cmp placeholder functionality. The walletBalance 
+  state of the App cmp is now synchronized with the changes in the Deposit and
+  transferMoneyToAccount cmps
+

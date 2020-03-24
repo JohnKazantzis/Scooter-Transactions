@@ -85,7 +85,10 @@ class App extends React.Component {
         
         this.getTotalBalance();
     }
-         
+
+    balanceChange = (balance) => {
+        this.setState({walletBalance: balance});
+    }
 
     render() {
         return (
@@ -112,13 +115,13 @@ class App extends React.Component {
                         <Rates />
                     </Route>
                     <Route path='/deposit'>
-                        <Deposit />
+                        <Deposit instance={this.state.web3instance} onBalanceChange={this.balanceChange} />
                     </Route>
                     <Route path='/TransferMoneyToContract'>
                         <TransferMoneyToContract />
                     </Route>
                     <Route path='/TransferMoneyToAccount'>
-                        <TransferMoneyToAccount instance={this.state.web3instance} />
+                        <TransferMoneyToAccount instance={this.state.web3instance} onBalanceChange={this.balanceChange} />
                     </Route>
                 </Switch>
             </Router>

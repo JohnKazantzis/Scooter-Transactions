@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 class TransferMoneyToAccount extends React.Component {
     state = {
-        amount: null,
+        amount: 0,
         address: null
     }
 
@@ -16,21 +16,22 @@ class TransferMoneyToAccount extends React.Component {
         }       
     }
 
-    handleSubmit = async (event, props) => {
+    handleSubmit = async event => {
         event.preventDefault();
-        console.log('Transfer to Account Submitted')
-        console.log(this.props.instance);
 
+        // Getting web3 instance and accounts
         const web3 = this.props.instance;
         const accounts = await web3.eth.getAccounts();
-        console.log(accounts);
+
+        // Converting Ether to Wei
+        let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'ether');
 
         // Send Money
         this.setState({ address: accounts[1] });
         await web3.eth.sendTransaction({
             from: accounts[0],
             to: this.state.address,
-            value: this.state.amount
+            value: ammountInWei
         });
 
         // Get Wallet Balance
@@ -42,8 +43,8 @@ class TransferMoneyToAccount extends React.Component {
         walletBalance1 = web3.utils.fromWei(walletBalance1);
         console.log(walletBalance1);
 
-
-
+        // Setting App cmp state
+        this.props.onBalanceChange(walletBalance += this.state.amount);
     }
 
     render() {
