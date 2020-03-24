@@ -30,6 +30,10 @@ class Deposit extends React.Component {
         
     }
 
+    handleSubmit = event => {
+        console.log('Deposit Submitted')
+    }
+
     render() {
         return (
             <div>

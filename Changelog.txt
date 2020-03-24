@@ -21,3 +21,8 @@
 - Created the credit card controlled info inputs in the Deposit cmp
 - Created the handleChange() method in the Deposit cmp to synchronize the
   inputs with the state of the cmp
+
+> 24/3/20
+- Added controlled inputs to the transferMoneyToAccount cmp
+- Added handleChange() and handleSubmit() methods to the Deposit
+  and transferMoneyToAccount cmps
