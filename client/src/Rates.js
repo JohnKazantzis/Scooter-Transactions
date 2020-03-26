@@ -12,25 +12,25 @@ class Rates extends React.Component {
 
     componentDidMount = async () => {
         // Getting the exchange rates from the Coinlayer API
-        const COINLAYER_URL = 'http://api.coinlayer.com/live';
-        const COINLAYER_API_KEY = process.env.REACT_APP_COINLAYER_API_KEY;
+        
         const coin = 'EUR';
 
-        const params = { access_key: COINLAYER_API_KEY, target: coin };
+        const params = { target: coin };
+        const headers = {'content-type':'application/json'}
 
-        const response = await axios.get(COINLAYER_URL, {params});
+        const response = await axios.get('http://127.0.0.1:5000/getExchangeRates/', {headers, params});
         console.log(response);
 
-        if(response.data.success) {
+        if(response.status === 200) {
             this.setState({
-                ETH: response.data.rates.ETH,
-                BTC: response.data.rates.BTC,
-                XRP: response.data.rates.XRP
+                ETH: response.data.ETH,
+                BTC: response.data.BTC,
+                XRP: response.data.XRP
             });
         }
         else {
             this.setState({ error: true });
-        }
+        }   
     }
 
     render() {

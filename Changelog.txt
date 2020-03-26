@@ -34,3 +34,8 @@
   state of the App cmp is now synchronized with the changes in the Deposit and
   transferMoneyToAccount cmps
 
+> 26/3/20
+- Created a mini server with Python3 and Flask
+- Moved the CoinLayer API request to the backend
+- The Rates cmp now calls the server method which makes the API request in order
+  to keep the API_KEY safe

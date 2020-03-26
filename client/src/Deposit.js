@@ -9,7 +9,7 @@ class Deposit extends React.Component {
         expMonth: null,
         expYear: null,
         CVV2CVC2: null,
-        value: null
+        value: undefined
     }
     
     handleChange = event => {

@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 class TransferMoneyToAccount extends React.Component {
     state = {
         amount: 0,
-        address: null
+        address: null,
+        value: undefined
     }
 
     handleChange = event => {

@@ -60,9 +60,6 @@ class App extends React.Component {
             walletBalance: walletBalance,
             web3instance: web3
         });
-
-        this.getTotalBalance();
-
     }
 
     getTotalBalance = async () => {
