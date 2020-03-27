@@ -7,6 +7,16 @@ import json
 
 app = Flask(__name__)
 
+class ContractUtils:
+
+    @staticmethod
+    def getLocalContracts():
+        f = open('../client/src/contracts/scooterTransactions.json')
+        data = json.load(f)
+        print(data['networks']['5777']['address'])
+        scooterTransactionsAddr = data['networks']['5777']['address']
+        print(scooterTransactionsAddr)
+
 class APICalls:
 
     @staticmethod
@@ -39,4 +49,5 @@ class APICalls:
         
 
 if __name__ == "__main__":
+    ContractUtils.getLocalContracts()
     app.run(debug=True)

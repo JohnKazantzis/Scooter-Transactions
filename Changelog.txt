@@ -39,3 +39,6 @@
 - Moved the CoinLayer API request to the backend
 - The Rates cmp now calls the server method which makes the API request in order
   to keep the API_KEY safe
+
+> 26/3/20
+- New server method to dynamically retrieve the address of the contract
