@@ -40,5 +40,15 @@
 - The Rates cmp now calls the server method which makes the API request in order
   to keep the API_KEY safe
 
-> 26/3/20
+> 27/3/20
 - New server method to dynamically retrieve the address of the contract
+
+> 28/3/20
+- Created the server-database connection
+
+> 29/3/20
+- Created a basic data model
+- Created the structure of the classes - Tables to be used by SqlAlchemy
+- Created the structure of the classes - methods called by the frontend
+- Added the API request get the Contracts saved in the db 
+- Created the exposed method in the server

@@ -4,8 +4,48 @@ import flask
 from flask_classful import FlaskView, route
 import requests
 import json
+from sqlalchemy import create_engine  
+from sqlalchemy import Column, String, Integer 
+from sqlalchemy.ext.declarative import declarative_base  
+from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
+
+db_string = 'postgres://postgres:2310452227@localhost:5432/postgres'
+db = create_engine(db_string)
+
+base = declarative_base()
+
+class Contract(base):  
+    __tablename__ = 'Contracts'
+
+    Name = Column(String)
+    Address = Column(String, primary_key=True)
+    FunctionName = Column(String)
+
+class User(base):  
+    __tablename__ = 'Users'
+
+    Id = Column(Integer, primary_key=True, autoincrement=True)
+    FirstName = Column(String)
+    LastName = Column(String)
+
+class UserUtils:
+
+    @staticmethod
+    @app.route('/createUser/', methods=['POST'])
+    def createUser():
+        pass
+
+    @staticmethod
+    @app.route('/deleteUser/', methods=['DELETE'])
+    def deleteUser():
+        pass
+    
+    @staticmethod
+    @app.route('/updateUser/', methods=['PATCH'])
+    def updateUser():
+        pass
 
 class ContractUtils:
 
@@ -13,9 +53,52 @@ class ContractUtils:
     def getLocalContracts():
         f = open('../client/src/contracts/scooterTransactions.json')
         data = json.load(f)
-        print(data['networks']['5777']['address'])
+        
         scooterTransactionsAddr = data['networks']['5777']['address']
         print(scooterTransactionsAddr)
+
+        return scooterTransactionsAddr
+
+    @staticmethod
+    @app.route('/getContracts/', methods=['GET'])
+    def getContracts():
+        #
+        # Returning all the Contract entries in the db
+        #
+        # data = request.args.to_dict()
+        # print(data)
+        Session = sessionmaker(db)  
+        session = Session()
+        
+        contracts = session.query(Contract)
+        data = {}
+        for contract in contracts:
+            data[contract.Address] = [contract.Name, contract.FunctionName]
+        session.commit()
+        
+        print(data)
+        responseToReact = flask.Response(json.dumps(data))
+        responseToReact.headers['Access-Control-Allow-Origin'] = '*'
+        return responseToReact
+
+
+
+    @staticmethod
+    @app.route('/addContract/', methods=['POST'])
+    def addContract():
+        pass
+
+    @staticmethod
+    @app.route('/deleteContract/<address>', methods=['DELETE'])
+    def deleteContract(address):
+        pass
+    
+    @staticmethod
+    @app.route('/updateContract/<address>', methods=['PATCH'])
+    def updateContract(address):
+        pass
+
+
 
 class APICalls:
 
@@ -48,6 +131,27 @@ class APICalls:
 
         
 
-if __name__ == "__main__":
-    ContractUtils.getLocalContracts()
-    app.run(debug=True)
+
+# Getting the address of the contract
+scooterTransactionsAddr = ContractUtils.getLocalContracts()
+
+Session = sessionmaker(db)  
+session = Session()
+
+base.metadata.create_all(db)
+
+# genesys = Contract(Name='Coffee Story', Address='address02', FunctionName='paymentFunction')
+# session.add(genesys)  
+session.commit()
+
+users = session.query(User)
+for x in users:
+    print(x.LastName)
+
+# # Connecting to the database
+# db, base = ContractUtils.dbInit()
+
+# # Creating Tables
+# ContractUtils.create_tables(db)
+    
+app.run(debug=True)
