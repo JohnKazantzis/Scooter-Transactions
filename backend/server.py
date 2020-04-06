@@ -2,6 +2,7 @@ import sqlite3
 from flask import Flask, request
 import flask
 from flask_classful import FlaskView, route
+from flask_cors import CORS
 import requests
 import json
 from sqlalchemy import create_engine  
@@ -10,6 +11,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
+CORS(app)
 
 db_string = 'postgres://postgres:2310452227@localhost:5432/postgres'
 db = create_engine(db_string)
@@ -73,7 +75,7 @@ class ContractUtils:
         contracts = session.query(Contract)
         data = {}
         for contract in contracts:
-            data[contract.Address] = [contract.Name, contract.FunctionName]
+            data[contract.Address] = {'Name': contract.Name, 'FunctionName': contract.FunctionName, 'Address': contract.Address}
         session.commit()
         
         print(data)
@@ -94,9 +96,29 @@ class ContractUtils:
         pass
     
     @staticmethod
-    @app.route('/updateContract/<address>', methods=['PATCH'])
-    def updateContract(address):
-        pass
+    @app.route('/updateContract/', methods=['POST'])
+    def updateContract():
+        data = request.values.to_dict()
+        for key in data.keys():
+            formData = json.loads(key)
+
+        print(formData)
+
+        Session = sessionmaker(db)  
+        session = Session()
+
+        # Checking if the Contract (address) already exists
+        contracts = session.query(Contract)
+        for contract in contracts:
+            if formData['address'] == contract.Address:
+                return 'Contract Already exists'
+
+        genesys = Contract(Name=formData['name'], Address=formData['address'], FunctionName=formData['functionName'])
+        session.add(genesys)
+
+        session.commit()
+        
+        return 'OK'
 
 
 

@@ -52,3 +52,12 @@
 - Created the structure of the classes - methods called by the frontend
 - Added the API request get the Contracts saved in the db 
 - Created the exposed method in the server
+
+> 30/3/20
+- Made the get request to get the existing Contracts
+
+> 31/3/20
+- Mapped the existing Contracts to JSX in order to show them in the page
+
+> 6/4/20
+- Implemented the add Contract method
