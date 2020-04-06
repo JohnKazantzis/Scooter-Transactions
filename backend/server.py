@@ -72,7 +72,7 @@ class ContractUtils:
         Session = sessionmaker(db)  
         session = Session()
         
-        contracts = session.query(Contract)
+        contracts = session.query(Contract).order_by(Contract.Address)
         data = {}
         for contract in contracts:
             data[contract.Address] = {'Name': contract.Name, 'FunctionName': contract.FunctionName, 'Address': contract.Address}
@@ -83,26 +83,31 @@ class ContractUtils:
         responseToReact.headers['Access-Control-Allow-Origin'] = '*'
         return responseToReact
 
-
-
     @staticmethod
-    @app.route('/addContract/', methods=['POST'])
-    def addContract():
-        pass
-
-    @staticmethod
-    @app.route('/deleteContract/<address>', methods=['DELETE'])
+    @app.route('/deleteContract/<address>/', methods=['DELETE'])
     def deleteContract(address):
-        pass
+        print(address)
+
+        Session = sessionmaker(db)  
+        session = Session()
+
+        # genesys = Contract(Address=address)
+        # session.delete(genesys)
+
+        session.query(Contract).filter(Contract.Address == address).delete()
+
+        session.commit()
+        
+        return 'Contact Deleted'
     
     @staticmethod
-    @app.route('/updateContract/', methods=['POST'])
+    @app.route('/updateAddContract/', methods=['POST'])
     def updateContract():
         data = request.values.to_dict()
         for key in data.keys():
             formData = json.loads(key)
 
-        print(formData)
+        # print(formData)
 
         Session = sessionmaker(db)  
         session = Session()
@@ -111,6 +116,13 @@ class ContractUtils:
         contracts = session.query(Contract)
         for contract in contracts:
             if formData['address'] == contract.Address:
+                # If amy field is different, update data!
+                if (formData['name'] != contract.Name) or (formData['functionName'] != contract.FunctionName):
+                    contract.Name = formData['name']
+                    contract.FunctionName = formData['functionName']
+                    session.commit()
+
+                    return 'Contract Updated'
                 return 'Contract Already exists'
 
         genesys = Contract(Name=formData['name'], Address=formData['address'], FunctionName=formData['functionName'])

@@ -61,3 +61,6 @@
 
 > 6/4/20
 - Implemented the add Contract method
+- Implemented the update Contract method
+- Implemented the delete Contract method
+- The values returned from the query are now ordered by address

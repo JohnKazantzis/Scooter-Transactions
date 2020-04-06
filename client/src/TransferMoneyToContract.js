@@ -59,8 +59,22 @@ class TransferMoneyToContract extends React.Component {
         }
         console.log(JSON.stringify(params))
 
-        const response = await axios.post('http://127.0.0.1:5000/updateContract/', JSON.stringify(params));
+        const response = await axios.post('http://127.0.0.1:5000/updateAddContract/', JSON.stringify(params));
         
+        if(response.status === 200) {
+            console.log(response)
+            await this.getExistingContracts();
+        }
+        else {
+            this.setState({ error: true });
+        }
+    }
+
+    deleteContract = async event => {
+        event.preventDefault();
+
+        const response = await axios.delete(`http://127.0.0.1:5000/deleteContract/${this.state.address}/`);
+
         if(response.status === 200) {
             console.log(response)
             await this.getExistingContracts();
@@ -103,15 +117,13 @@ class TransferMoneyToContract extends React.Component {
                                 <label>Payable Function (Insert '-' if its a fallback function): </label><br />
                                 <input name='functionName' type="text" value={this.state.value} onChange={this.handleChange} /><br />
                                 <input type="submit" value="Submit" />
+                                <button onClick={this.deleteContract}> Delete</button>
                             </form>
                         </section>
                     </main>
                     <Link to='/'>
                         <button> Back </button>
                     </Link>
-                    {this.state.name}
-                    {this.state.address}
-                    {this.state.functionName}
                 </div>
             );
         }
