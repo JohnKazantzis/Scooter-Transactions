@@ -9,12 +9,16 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, String, Integer 
 from sqlalchemy.ext.declarative import declarative_base  
 from sqlalchemy.orm import sessionmaker
+import hashlib
+
+from JWTTokenUtils import *
 
 app = Flask(__name__)
 CORS(app)
 
 db_string = 'postgres://postgres:2310452227@localhost:5432/postgres'
 db = create_engine(db_string)
+
 
 base = declarative_base()
 
@@ -24,6 +28,7 @@ class Contract(base):
     Name = Column(String)
     Address = Column(String, primary_key=True)
     FunctionName = Column(String)
+    userId = Column(Integer)
 
 class User(base):  
     __tablename__ = 'Users'
@@ -31,23 +36,81 @@ class User(base):
     Id = Column(Integer, primary_key=True, autoincrement=True)
     FirstName = Column(String)
     LastName = Column(String)
+    Username = Column(String)
+    Password = Column(String)
+
 
 class UserUtils:
 
     @staticmethod
+    def passwordHashing(password):
+        # Creating the user's password hash
+        return hashlib.sha224(password).hexdigest()
+
+    @staticmethod
+    @app.route('/checkToken/', methods=['GET'])
+    def checkToken():
+        data = request.args.to_dict()
+        token = data['token']
+
+        result = JWTTokenUtils.checkToken(token)
+        if result is None:
+            return '0'
+        return '1'
+
+    @staticmethod
+    @app.route('/login/', methods=['GET'])
+    def login():
+        # Getting calls's parameters
+        data = request.args.to_dict()
+
+        # Creating session
+        Session = sessionmaker(db)  
+        session = Session()
+
+        # Querying the database to validate the user's credentials
+        users = session.query(User).filter(User.Username == data['username']).filter(User.Password == UserUtils.passwordHashing(data['password'].encode('utf-8')))
+
+        for user in users:
+            print('User found: {}, {}'.format(user.Username, user.Password))
+
+            # Creating token
+            token = JWTTokenUtils.createToken(user.Id)
+            return {'token': token.decode('utf-8')}
+        session.commit()
+
+        return 'User not found!'
+
+    @staticmethod
     @app.route('/createUser/', methods=['POST'])
     def createUser():
-        pass
+        data = request.values.to_dict()
+        for key in data.keys():
+            formData = json.loads(key)
+
+        print(formData)
+
+        # Creating session
+        Session = sessionmaker(db)  
+        session = Session()
+
+        genesys = User(Username=formData['username'], Password=UserUtils.passwordHashing(formData['password'].encode('utf-8')))
+        session.add(genesys)
+
+        session.commit()
+
+        return 'ok'
 
     @staticmethod
     @app.route('/deleteUser/', methods=['DELETE'])
     def deleteUser():
-        pass
-    
-    @staticmethod
-    @app.route('/updateUser/', methods=['PATCH'])
-    def updateUser():
-        pass
+        data = request.args.to_dict()
+        print(data)
+
+        session.query(User).filter(User.Username == data['username']).filter(User.Password == UserUtils.passwordHashing(data['password'].encode('utf-8'))).delete()
+        session.commit()
+
+        return 'OK'    
 
 class ContractUtils:
 
@@ -67,8 +130,6 @@ class ContractUtils:
         #
         # Returning all the Contract entries in the db
         #
-        # data = request.args.to_dict()
-        # print(data)
         Session = sessionmaker(db)  
         session = Session()
         
@@ -116,7 +177,7 @@ class ContractUtils:
         contracts = session.query(Contract)
         for contract in contracts:
             if formData['address'] == contract.Address:
-                # If amy field is different, update data!
+                # If any field is different, update data!
                 if (formData['name'] != contract.Name) or (formData['functionName'] != contract.FunctionName):
                     contract.Name = formData['name']
                     contract.FunctionName = formData['functionName']
@@ -178,14 +239,17 @@ base.metadata.create_all(db)
 # session.add(genesys)  
 session.commit()
 
-users = session.query(User)
-for x in users:
-    print(x.LastName)
+# users = session.query(User)
+# for x in users:
+#     print(x.LastName)
 
 # # Connecting to the database
 # db, base = ContractUtils.dbInit()
 
 # # Creating Tables
 # ContractUtils.create_tables(db)
+
+token = JWTTokenUtils.createToken(1)
+JWTTokenUtils.checkToken(token)
     
 app.run(debug=True)

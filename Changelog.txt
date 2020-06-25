@@ -64,3 +64,38 @@
 - Implemented the update Contract method
 - Implemented the delete Contract method
 - The values returned from the query are now ordered by address
+
+> 25/4/20
+- Deployment to rinkeby testnet
+- Management of funds of both accounts
+
+> 27/4/20
+- Changes to the App cmp in order to work in the testnet
+- Changes to the Deposit cmp in order to work in the testnet
+- Changes to the transferMoneyToAccount cmp in order to work in the testnet
+
+> 3/5/20
+- Implemented basic backend login functionality
+
+> 4/5/20
+- Started warking on JWT Token
+
+> 5/5/20
+- Added the JWT crete method
+
+> 6/5/20
+- Added the JWT check method
+
+> 7/5/20
+- The JWT token now returns to the frontend afte the login
+- Thes token is passed from the UserManagement cmp to the app cmp and saved to the App state
+
+> 8/5/20
+- Added the userId column in the contracts table to be able to represent a 1->N relationship
+- Started cleaning up code - Moved JWT token logic to an other file
+
+> 20/6/20
+- Improving the UI
+
+> 23/6/20
+- Fixing the login functionality to work on refresh by saving the JWT Token in the LocalStorage

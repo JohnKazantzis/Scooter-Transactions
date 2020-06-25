@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 
 class TransferMoneyToAccount extends React.Component {
     state = {
         amount: 0,
         address: null,
-        value: undefined
+        value: undefined,
+        loading: false
     }
 
     handleChange = event => {
@@ -22,16 +23,18 @@ class TransferMoneyToAccount extends React.Component {
 
         // Getting web3 instance and accounts
         const web3 = this.props.instance;
-        const accounts = await web3.eth.getAccounts();
+        const accounts = this.props.accounts;
 
         // Converting Ether to Wei
         let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'ether');
 
+        // Start Loading
+        this.setState({ loading: true });
+
         // Send Money
-        this.setState({ address: accounts[1] });
         await web3.eth.sendTransaction({
             from: accounts[0],
-            to: this.state.address,
+            to: accounts[1],
             value: ammountInWei
         });
 
@@ -46,26 +49,36 @@ class TransferMoneyToAccount extends React.Component {
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);
+
+        // Stop Loading
+        this.setState({ loading: false });
     }
 
     render() {
-        return (
-            <div>
-                <div>
-                    TransferMoneyToAccount
+        if(this.state.loading) {
+            return (
+                <div className="TMTAloaderContainer">
+                    <div class="lds-facebook"><div></div><div></div><div></div></div>
+                    {/* <div className="loadingComments">Your transaction is being processed. Please be patient!</div> */}
                 </div>
-                <form onSubmit={this.handleSubmit}>
-                    <label>Amount: </label>
-                    <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} /><br />
-                    <label>Account Address: </label>
-                    <input name='address' type="text" value={this.state.value} onChange={this.handleChange} /><br />
-                    <input type="submit" value="Submit" />
-                </form>
-                <Link to='/'>
-                    <button> Back </button>
-                </Link>
-            </div>
-        );
+            );
+        }
+        else {
+            return (
+                <div>
+                    <h1>
+                        Transfer Money To Account
+                    </h1>
+                    <form onSubmit={this.handleSubmit}>
+                        <label>Amount: </label>
+                        <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} />
+                        <label>Account Address: </label>
+                        <input name='address' type="text" value={this.state.value} onChange={this.handleChange} />
+                        <button onClick={this.handleSubmit}> Transfer Funds </button>
+                    </form>
+                </div>
+            );
+        }
     }
 }
 

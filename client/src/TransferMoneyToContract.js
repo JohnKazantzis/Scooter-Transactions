@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import axios from 'axios';
 
 class TransferMoneyToContract extends React.Component {
@@ -27,7 +27,8 @@ class TransferMoneyToContract extends React.Component {
         }
 
         const existingContracts = Object.entries(response.data).map(([key, value]) => {
-            return <li key={key}>{key}: {value.Name}, {value.FunctionName}</li>
+            // return <li key={key}>{key}: {value.Name}, {value.FunctionName}</li>
+            return <button> {value.Name}</button>
         });
 
         this.setState({ existingContracts: existingContracts});
@@ -91,39 +92,32 @@ class TransferMoneyToContract extends React.Component {
                     <div>
                         An Error Has Occurred!
                     </div>
-                    <Link to='/'>
-                        <button> Back </button>
-                    </Link>
                 </div>
             );
         }
         else {
             return(
-                <div>
-                    <header>
-                        <h2>TransferMoneyToContract</h2><br/>
-                    </header>
+                <div className="transferMoneyToContract">
+                    <h1>Transfer Money To Contract</h1>
                     <main>
-                        <section>
+                        <section className="ulSection">
                             <ul>{this.state.existingContracts}</ul>
                         </section>
                         <section>
-                            <h3>Add/Update Contract</h3>
                             <form onSubmit={this.handleSubmit}>
-                                <label>Name: </label><br />
-                                <input name='name' type="text" value={this.state.value} onChange={this.handleChange} /><br />
-                                <label>Contract Address: </label><br />
-                                <input name='address' type="text" value={this.state.value} onChange={this.handleChange} /><br />
-                                <label>Payable Function (Insert '-' if its a fallback function): </label><br />
-                                <input name='functionName' type="text" value={this.state.value} onChange={this.handleChange} /><br />
-                                <input type="submit" value="Submit" />
-                                <button onClick={this.deleteContract}> Delete</button>
+                                <label>Name: </label>
+                                <input name='name' type="text" value={this.state.value} onChange={this.handleChange} />
+                                <label>Contract Address: </label>
+                                <input name='address' type="text" value={this.state.value} onChange={this.handleChange} />
+                                <label>Payable Function: </label>
+                                <input name='functionName' type="text" value={this.state.value} onChange={this.handleChange} />
+                                <div>
+                                    <button onClick={this.handleSubmit}> Submit </button>
+                                    <button onClick={this.deleteContract}> Delete </button>
+                                </div>
                             </form>
                         </section>
                     </main>
-                    <Link to='/'>
-                        <button> Back </button>
-                    </Link>
                 </div>
             );
         }

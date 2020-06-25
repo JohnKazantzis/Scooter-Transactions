@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 
 class Rates extends React.Component {
     state = {
@@ -40,9 +40,6 @@ class Rates extends React.Component {
                     <div>
                         An Error Has Occurred!
                     </div>
-                    <Link to='/'>
-                        <button> Back </button>
-                    </Link>
                 </div>
             );
         }
@@ -50,14 +47,11 @@ class Rates extends React.Component {
             return(
                 <div>
                     <div>
-                        Exchange Rates:<br /><br />
+                        <span>Exchange Rates:</span><br /><br />
                         ETH: {this.state.ETH}<br />
                         BTC: {this.state.BTC}<br />
                         XRP: {this.state.XRP}<br />
                     </div>
-                    <Link to='/'>
-                        <button> Back </button>
-                    </Link>
                 </div>
             );
         }

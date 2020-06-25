@@ -1,0 +1,622 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:regular,bold,italic&subset=latin,latin-ext');
+/* 
+    Declaring variables that contain the main colors
+*/
+:root {
+    --primary-color: #5CDB95;
+    --secondary-color: #379683;
+    --link-color: #05386B;
+
+    --close-to-primary-color: #8EE4AF;
+    --close-to-white-color: #EDF5E1;
+
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0rem;
+    margin: 0;
+    background-color: var(--primary-color);
+    font-family: 'Open Sans', sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:focus {
+    outline: none;
+}
+
+input:focus {
+    outline: none;
+}
+
+/* Scroll bar */
+*::-webkit-scrollbar {
+    width: 1em;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color);
+    outline: 1px solid slategrey;
+    border-radius: 2rem;
+}
+
+#transferMoney .transferMoneyToContract .ulSection ul::-webkit-scrollbar {
+    width: 1em;
+}
+
+#transferMoney .transferMoneyToContract .ulSection ul::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border: 2px solid var(--close-to-white-color);
+    outline: 1px solid slategrey;
+    border-radius: 2rem;
+    opacity: 0;
+}
+
+/* Login Check */
+.loginCheck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width:  100%;
+    height: 100%;
+    margin-top: 10rem;
+}
+
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--link-color);
+    opacity: 0.8;
+    width: 100%;
+    height: 10vh;
+    padding: 0 30px;  
+}
+
+.navbar ul {
+    display: flex;
+    list-style: none;
+    color: var(--link-color);
+}
+
+.navbar a {
+    color: var(--link-color);
+    text-decoration: none;
+    padding: 10px 8px;
+    margin: 0 5px;
+}
+
+.navbar a:hover {
+    font-weight: bold;
+}
+
+.logoutButton {
+    background-color: var(--link-color);
+    color: var(--close-to-white-color);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.1rem 0.8rem;
+}
+
+.logoutButton:hover {
+    background-color: #0359ad;
+    color: var(--close-to-white-color);
+    border: none;
+    border-radius: 0.5rem;
+    /* padding: 0.2rem 1rem; */
+    /* font-weight: bold; */
+}
+
+/* All Sections */
+
+.sectionsLayout {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sections */
+
+#balance-rates {
+    display: flex;
+    height: 90vh;
+    justify-content: center;
+    align-items: center;
+    /* transform: translateX(10px); */
+}
+
+#rates {
+    width: 60%;
+    height: 50vh;
+    background-color: var(--secondary-color);
+    border-radius: 5rem 15rem 5rem;
+    transform: translateY(-10vh);
+
+    /* flexbox */
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#rates div {
+    padding: 1rem;
+    color: var(--close-to-white-color);
+    font-size: 1.5rem;
+}
+
+#rates span {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+#rates div:nth-child(2) {
+    display: flex;
+    text-align: left;
+    color: var(--close-to-white-color)
+}
+
+#UserManagement {
+    height: 100vh;
+}
+
+
+#deposit {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Authentication */
+#auth {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#auth button {
+    transform: translateY(-20vh);
+    font-size: 0.8rem;
+    background-color: var(--link-color);
+    width: 300px;
+    color: var(--close-to-white-color);
+    border: none;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    margin: 0.5rem;
+}
+
+.removeButton {
+    display: none;
+}
+
+#auth button:hover {
+    background-color: #0359ad;
+}
+
+#login {
+    display: none;
+}
+
+#loginShow {
+    background-color: var(--secondary-color);
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+
+    /* Keyframe */
+    animation-name: loginEntrance;
+    animation-duration: 0.6s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+
+}
+
+@keyframes loginEntrance {
+    from {
+        transform: translateX(10000px);
+    }
+
+    to {
+        transform: translateX(0px);
+    }
+}
+
+#loginShow button {
+    transform: translateY(0vh);
+    font-size: 0.8rem;
+    background-color: var(--link-color);
+    width: 300px;
+    color: var(--close-to-white-color);
+    border: none;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    margin: 0.5rem;
+}
+
+.logoAppearing {
+    font-size: 2rem;
+    color: var(--link-color);
+    opacity: 0.8;
+    width: 100%;
+    height: 10vh;
+    padding: 0 30px;  
+}
+
+.logoAppearing .logo {
+    margin-top: 1rem;
+}
+
+.logoSpan {
+    color: var(--secondary-color);
+}
+
+/* User Management */
+
+.userManagement label {
+    display: block;
+}
+
+.UMutils {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.UMutils form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.UMutils .inputs {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    text-align: left;
+    margin: auto;
+}
+
+.UMutils label {
+    width: 100%;
+    text-align: left;
+    padding: 0.3rem 1rem;
+}
+
+.UMutils input {
+    width: 95%;
+    height: 2rem;
+    margin: 0.1rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+/* Deposit */
+
+.cardDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-color);
+    width: 70%;
+    height: 90vh;
+    border: none;
+    border-radius: 2rem;
+}
+
+.cardDetails h1 {
+    padding: 1.2rem;
+    
+}
+
+.cardDetails div {
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cardDetails form {
+    width: 100%;
+    height: 100;
+}
+
+.cardDetails form label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.3rem 1rem;
+    margin: 0;
+}
+
+.cardDetails form input {
+    width: 95%;
+    height: 2rem;
+    margin: 0.1rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.cardDetails form button {
+    transform: translateY(0vh);
+    font-size: 0.8rem;
+    background-color: var(--link-color);
+    width: 300px;
+    color: var(--close-to-white-color);
+    border: none;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    margin: 1.2rem;
+}
+
+.cardDetails form button:hover {
+    background-color: #0359ad;
+}
+
+/* Transfer Money */
+#transferMoney {
+    height: 90vh;
+    width: 70%;
+    margin: auto;
+    transform: translateY(25%);
+}
+
+*:focus {
+    outline: none;
+}
+
+
+#transferMoney #transferMoneyToAccount {
+    height: 80vh;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#transferMoneyToAccount div {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 2rem;
+}
+
+#transferMoneyToAccount h1 {
+    display: block;
+}
+
+#transferMoneyToAccount form {
+    width: 100%;
+    height: 100%;
+    padding: 0.3rem 1rem;
+}
+#transferMoneyToAccount form label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0 5.2% ;
+    text-align: left;
+    padding: 0.3rem 1rem;
+}
+
+#transferMoneyToAccount form input {
+    width: 85%;
+    height: 2rem;
+    margin: 0.1rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+#transferMoneyToAccount form button {
+    transform: translateY(0vh);
+    font-size: 0.8rem;
+    background-color: var(--link-color);
+    width: 300px;
+    color: var(--close-to-white-color);
+    border: none;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    margin: 1.7rem;
+}
+
+#transferMoneyToAccount form button:hover {
+    background-color: #0359ad;
+}
+
+/* Transfer Money - TransferMoneyToContract */
+
+#transferMoney #transferMoneyToContract {
+    height: 100%;
+    width: 100%;
+}
+
+
+#transferMoney .transferMoneyToContract {
+    height: 80vh;
+    width: 100%;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+#transferMoney .transferMoneyToContract form label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    padding: 0.3rem 1rem;
+}
+
+#transferMoney .transferMoneyToContract form input {
+    width: 95%;
+    height: 2rem;
+    margin: 0.1rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+#transferMoney .transferMoneyToContract form button {
+    transform: translateY(0vh);
+    font-size: 0.8rem;
+    background-color: var(--link-color);
+    width: 230px;
+    color: var(--close-to-white-color);
+    border: none;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    margin: 1rem;
+}
+
+#transferMoney .transferMoneyToContract main {
+    width: 65%;
+}
+
+#transferMoney .transferMoneyToContract main section form div {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-top: 0.8rem;
+}
+
+#transferMoney .transferMoneyToContract main section form {
+    padding-top: 2rem;
+}
+
+#transferMoney .transferMoneyToContract .ulSection   {
+    height: 30%;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+#transferMoney .transferMoneyToContract .ulSection ul   {
+    list-style: none;
+    width: 100%;
+    height: 100%;
+    max-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: scroll;
+    margin: 1rem;
+    padding: auto;
+   
+}
+
+#transferMoney .transferMoneyToContract .ulSection button {
+    font-size: 0.8rem;
+    background-color: var(--link-color);
+    color: var(--close-to-white-color);
+    border: none;
+    border-top: 1px solid var(--close-to-white-color);
+    border-radius: 0.2rem;
+    padding: 0.5rem;
+    margin-top: 0.1rem;
+}
+
+#transferMoney .transferMoneyToContract button:hover {
+    background-color: #0359ad;
+}
+
+/* Loading Spinner  */
+.lds-facebook {
+    display: inline-block;
+    position: relative;
+    width: 80px !important;
+    height: 80px;
+  }
+  .lds-facebook div {
+    border-radius: 2rem;
+    display: inline-block;
+    position: absolute;
+    left: 8px !important;
+    width: 16px !important;
+    background: #fff !important;
+    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .lds-facebook div:nth-child(1) {
+    left: 8px !important;
+    animation-delay: -0.24s;
+  }
+  .lds-facebook div:nth-child(2) {
+    left: 32px !important;
+    animation-delay: -0.12s;
+  }
+  .lds-facebook div:nth-child(3) {
+    left: 56px !important;
+    animation-delay: 0;
+  }
+  @keyframes lds-facebook {
+    0% {
+      top: 8px;
+      height: 64px;
+    }
+    50%, 100% {
+      top: 24px;
+      height: 32px;
+    }
+  }
+  
+.loaderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px !important; 
+    height: 100px !important;
+}
+
+.loadingComments {
+    transform: translateY(-100%);
+    width: 20% !important;
+    height: 20% !important;
+    margin: 0 !important;
+}
+
+
+.TMTAloaderContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 70% !important; 
+    height: 70% !important;
+    
+}
+
+.TMTAloaderContainer .loadingComments {
+    width: 40% !important;
+    height: 20% !important;
+}
+
+/* #transferMoneyToAccount div {
+    display: flex;
+    flex-direction: column;
+} */

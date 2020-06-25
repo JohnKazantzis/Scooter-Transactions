@@ -1,23 +1,24 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 
 class Deposit extends React.Component {
     state = {
         amount: 0,
         cardNumber: null,
-        email: null,
+        chname: null,
         expMonth: null,
         expYear: null,
         CVV2CVC2: null,
-        value: undefined
+        value: undefined,
+        loading: false
     }
     
     handleChange = event => {
         if(event.target.name === 'cardNumber') {
             this.setState({cardNumber: event.target.value});
         }
-        else if(event.target.name === 'email') {
-            this.setState({email: event.target.value});
+        else if(event.target.name === 'chname') {
+            this.setState({chname: event.target.value});
         }
         else if(event.target.name === 'expMonth') {
             this.setState({expMonth: event.target.value});
@@ -46,9 +47,12 @@ class Deposit extends React.Component {
         // Converting Ether to Wei
         let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'ether');
 
+        // Start Loading
+        this.setState({ loading: true });
+
         // Send Money
         await web3.eth.sendTransaction({
-            from: accounts[4],
+            from: accounts[1],
             to: accounts[0],
             value: ammountInWei
         });
@@ -64,42 +68,53 @@ class Deposit extends React.Component {
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);
+
+        // Stop Loading
+        this.setState({ loading: false });
     }
 
     render() {
-        return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <label>Amount To Deposit (ETH): </label>
-                    <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} /><br /><br />
-
-                    <label>Card Number: </label>
-                    <input name='cardNumber' type="text" value={this.state.value} onChange={this.handleChange} /><br />
-
-                    <label>Email: </label>
-                    <input name='email' type="email" value={this.state.value} onChange={this.handleChange} /><br />
-
-                    <label>Expiration Month: </label>
-                    <input name='expMonth' type="number" value={this.state.value} onChange={this.handleChange} /><br />
-
-                    <label>Expiration Year: </label>
-                    <input name='expYear' type="number" value={this.state.value} onChange={this.handleChange} /><br />
-
-                    <label>CVV2/CVC2: </label>
-                    <input name='CVV2CVC2' type="text" value={this.state.value} onChange={this.handleChange} /><br />
-
-                    <input type="submit" value="Submit" />
-                </form>
-                <Link to='/'>
-                    <button> Back </button>
-                </Link>
-                {this.state.cardNumber}
-                {this.state.email}
-                {this.state.expMonth}
-                {this.state.expYear}
-                {this.state.CVV2CVC2}
-            </div>
-        );
+        if(this.state.loading) {
+            return (
+                <div>
+                    <div className="loaderContainer">
+                        <div class="lds-facebook"><div></div><div></div><div></div></div>
+                    </div>
+                        <div className="loadingComments">Your transaction is being processed. Please be patient!</div>
+                </div>
+            );
+        }
+        else {
+            return (
+                <div>
+                    <h1>
+                        Deposit Money
+                    </h1>
+                    <form onSubmit={this.handleSubmit}>
+                        <div className="inputs">
+                            <label>Amount To Deposit (ETH): </label>
+                            <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} />
+    
+                            <label>Card Number: </label>
+                            <input name='cardNumber' type="text" value={this.state.value} onChange={this.handleChange} />
+    
+                            <label>Card Holder Name: </label>
+                            <input name='chname' type="text" value={this.state.value} onChange={this.handleChange} />
+    
+                            <label>Expiration Month: </label>
+                            <input name='expMonth' type="number" value={this.state.value} onChange={this.handleChange} />
+    
+                            <label>Expiration Year: </label>
+                            <input name='expYear' type="number" value={this.state.value} onChange={this.handleChange} />
+    
+                            <label>CVV2/CVC2: </label>
+                            <input name='CVV2CVC2' type="text" value={this.state.value} onChange={this.handleChange} />
+                            <button onClick={this.handleSubmit}> Deposit Funds </button>
+                        </div>
+                    </form>
+                </div>
+            );
+        }
     }
 }
 
