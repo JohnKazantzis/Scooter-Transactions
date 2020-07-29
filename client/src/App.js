@@ -27,7 +27,8 @@ class App extends React.Component {
         contractAddr: null,
         totalBalance: 0,
         paymentAmount: 0,
-        token: '',
+        token: "",
+        mnemonic: "",
         loggedIn: false,
         loginShow: "login",
         loginButtonShow: "",
@@ -36,13 +37,22 @@ class App extends React.Component {
 
     componentDidMount = async () => {
         // Checking if the JWT Token is valid
+        console.log('####Init 11: ', this.state.token, this.state.mnemonic); 
+        console.log('####Init LOCAL 11: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic")); 
         this.loginCheck();
+        console.log('####Init 22: ', this.state.token, this.state.mnemonic);
+        console.log('####Init LOCAL 22: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic")); 
+        // const mnemonic = "multiply intact zone error sausage soap light prize potato limit excess subway";
+        const infuraApiKey = "97bda0faaf4b44cb87286a8c0dd98e16";
+        //console.log('Mnemonic returned: ', this.state.mnemonic, localStorage.getItem('Mnemonic'), this.state.mnemonic && this.state.token);
+        //const existingMnemonic = localStorage.getItem("Mnemonic");
+    }
 
-        const mnemonic = "multiply intact zone error sausage soap light prize potato limit excess subway";
+    initialiseWallet = async () => {
         const infuraApiKey = "97bda0faaf4b44cb87286a8c0dd98e16";
 
         // Creating a rinkeby TestNet provider
-        const web3 = new Web3(new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/v3/'+infuraApiKey));
+        const web3 = new Web3(new HDWalletProvider(localStorage.getItem("Mnemonic"), 'https://rinkeby.infura.io/v3/'+infuraApiKey));
 
         // let privateKey = '3B673A55CC628BEC289F98EE13BEC78C0DEEEBC74D53ADFD0028D917704D79DB';
 
@@ -61,18 +71,31 @@ class App extends React.Component {
         // Getting the Network Id and the address of the deployed Contract
         const netId = await web3.eth.net.getId();
         const contractAdrr = await deployedContract.networks[netId].address;
-        console.log(netId);
-        console.log(contractAdrr);
+        console.log('NetId', netId);
+        console.log('ContractId', contractAdrr);
 
         const contractInstance = new web3.eth.Contract(
             deployedContract.abi,
             contractAdrr
         );
         console.log(contractInstance);
+        
+        // // Getting Initial Contract Balance
+        // console.log('Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
+
+        // // Sending Wei
+        // let options = {
+        //     from: accounts[0],
+        //     value: 10
+        // }
+        // await contractInstance.methods.makePayment().send(options);
+
+        // // // Getting Initial Contract Balance
+        // console.log('$$$ New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
 
         // Get balance for account 0
         let walletBalance = await web3.eth.getBalance(accounts[0]);
-        walletBalance = web3.utils.fromWei(walletBalance);
+        // walletBalance = web3.utils.fromWei(walletBalance);
         console.log('Account[0] ' + walletBalance);
 
         // Get balance for account 1
@@ -92,7 +115,10 @@ class App extends React.Component {
 
     loginCheck = async () => {
         // Getting Token, if already exists
-        const existingToken = localStorage.getItem('JWTtoken')
+        const existingToken = localStorage.getItem("JWTtoken");
+        const existingMnemonic = localStorage.getItem("Mnemonic");
+
+        console.log('####TOKEN CHECK 11: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic"));
         
         // Checking if the JWT Token is valid
         const headers = {'content-type':'application/json'}
@@ -102,14 +128,15 @@ class App extends React.Component {
         
         const response = await axios.get('http://127.0.0.1:5000/checkToken/', {headers, params});
         console.log(response);
-        console.log('response data', response.data === '1');
         
-        if(response.data == '1') {
-            this.setState({ token: existingToken });
+        if(response.data === 1) {
+            this.setState({ token: existingToken, mnemonic: existingMnemonic });
+            this.initialiseWallet();
         }
         else {
-            this.setState({ token: '' });
-            localStorage.setItem("JWTtoken", '');
+            this.setState({ token: "", mnemonic: "" });
+            localStorage.setItem("JWTtoken", "");
+            localStorage.setItem("Mnemonic", "");
         }
         this.setState({ loginCheck: false });
     }
@@ -118,21 +145,24 @@ class App extends React.Component {
         this.setState({walletBalance: balance});
     }
 
-    getToken = data => {
-        this.setState({token: data});
-        console.log('App: ' + data);
-
+    getCred = data => {
         // Save token to local storage
-        localStorage.setItem('JWTtoken', data);
+        localStorage.setItem("JWTtoken", data.token);
+        localStorage.setItem("Mnemonic", data.mnemonic);
+
+        this.setState({token: data.token, mnemonic: data.mnemonic});
+        console.log('App: ', this.state.token, this.state.mnemonic);   
+        this.initialiseWallet();     
     }
 
     showUserManagement = event => {
-        this.setState({ loginShow: 'loginShow', loginButtonShow: 'removeButton' });
+        this.setState({ loginShow: "loginShow", loginButtonShow: "removeButton" });
     }
 
     logout = event => {
         this.setState( { loginShow: "login", loginButtonShow: "", token: "" } );
-        localStorage.setItem("JWTtoken", '');
+        localStorage.setItem("JWTtoken", "");
+        localStorage.setItem("Mnemonic", "");
     }
 
     render() {
@@ -140,7 +170,7 @@ class App extends React.Component {
             return(
                 <div className="loginCheck">
                     <div className="loaderContainer">
-                        <div class="lds-facebook"><div></div><div></div><div></div></div>
+                        <div className="lds-facebook"><div></div><div></div><div></div></div>
                     </div>
                     <div className="loadingComments">Checking For Active Session</div>
                 </div>
@@ -168,10 +198,10 @@ class App extends React.Component {
                                         <span>Balance:</span> {parseFloat(this.state.walletBalance).toFixed(2)} ETH
                                     </div>
                                     <div>
-                                        {/* <Rates /> */}
-                                        ETH: 1000000<br />
+                                        <Rates />
+                                        {/* ETH: 1000000<br />
                                         BTC: 2000000<br />
-                                        XRP: 3000000<br />
+                                        XRP: 3000000<br /> */}
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +213,7 @@ class App extends React.Component {
                             <div id="transferMoney">
                                 <Carousel>
                                     <div id="transferMoneyToContract">
-                                        <TransferMoneyToContract />
+                                        <TransferMoneyToContract token={this.state.token} accounts={this.state.accounts} contractInstance={this.state.contractInstance} />
                                     </div>
                                     <div id="transferMoneyToAccount">
                                         <TransferMoneyToAccount instance={this.state.web3instance} accounts={this.state.accounts} onBalanceChange={this.balanceChange} />
@@ -205,7 +235,7 @@ class App extends React.Component {
                         <div id="auth">
                             <button onClick={this.showUserManagement} className={this.state.loginButtonShow}> Log In / Create New Account </button>
                             <div id={this.state.loginShow}>
-                                <UserManagement getToken={this.getToken} />
+                                <UserManagement getCred={this.getCred} />
                             </div>
                         </div>                    
                     </div>

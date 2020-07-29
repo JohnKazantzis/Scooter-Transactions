@@ -47,10 +47,10 @@ class Rates extends React.Component {
             return(
                 <div>
                     <div>
-                        <span>Exchange Rates:</span><br /><br />
-                        ETH: {this.state.ETH}<br />
-                        BTC: {this.state.BTC}<br />
-                        XRP: {this.state.XRP}<br />
+                        {/* <span>Exchange Rates:</span><br /><br /> */}
+                        <b>ETH:</b> {this.state.ETH} €<br />
+                        <b>BTC:</b> {this.state.BTC} €<br />
+                        <b>XRP:</b> {this.state.XRP} €<br />
                     </div>
                 </div>
             );

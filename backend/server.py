@@ -12,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 import hashlib
 
 from JWTTokenUtils import *
+from wallet import *
 
 app = Flask(__name__)
 CORS(app)
@@ -38,6 +39,7 @@ class User(base):
     LastName = Column(String)
     Username = Column(String)
     Password = Column(String)
+    Mnemonic = Column(String)
 
 
 class UserUtils:
@@ -76,7 +78,7 @@ class UserUtils:
 
             # Creating token
             token = JWTTokenUtils.createToken(user.Id)
-            return {'token': token.decode('utf-8')}
+            return {'token': token.decode('utf-8'), 'mnemonic': user.Mnemonic}
         session.commit()
 
         return 'User not found!'
@@ -90,16 +92,23 @@ class UserUtils:
 
         print(formData)
 
+        # Creating Mnemonic
+        seed = walletUtils.createSeed()
+        print(seed)
+
         # Creating session
         Session = sessionmaker(db)  
         session = Session()
 
-        genesys = User(Username=formData['username'], Password=UserUtils.passwordHashing(formData['password'].encode('utf-8')))
+        genesys = User(Username=formData['username'], Password=UserUtils.passwordHashing(formData['password'].encode('utf-8')), Mnemonic=seed)
         session.add(genesys)
 
         session.commit()
 
-        return 'ok'
+        # The details of the new user
+        userDetails = {'username': formData['username'], 'mnemonic': seed}
+
+        return userDetails
 
     @staticmethod
     @app.route('/deleteUser/', methods=['DELETE'])
@@ -132,17 +141,26 @@ class ContractUtils:
         #
         Session = sessionmaker(db)  
         session = Session()
-        
-        contracts = session.query(Contract).order_by(Contract.Address)
-        data = {}
-        for contract in contracts:
-            data[contract.Address] = {'Name': contract.Name, 'FunctionName': contract.FunctionName, 'Address': contract.Address}
-        session.commit()
-        
-        print(data)
-        responseToReact = flask.Response(json.dumps(data))
-        responseToReact.headers['Access-Control-Allow-Origin'] = '*'
-        return responseToReact
+
+        # Retrieving and checking the token
+        data = request.args.to_dict()
+
+        result = JWTTokenUtils.checkToken(data['token'])
+        print('Get Contracts token: ' + str(result))
+
+        if result is None:
+            return 0, 201
+        else:
+            contracts = session.query(Contract).filter(Contract.userId==result).order_by(Contract.Address)
+            data = {}
+            for contract in contracts:
+                data[contract.Address] = {'Name': contract.Name, 'FunctionName': contract.FunctionName, 'Address': contract.Address}
+            session.commit()
+            
+            print(data)
+            responseToReact = flask.Response(json.dumps(data))
+            responseToReact.headers['Access-Control-Allow-Origin'] = '*'
+            return responseToReact
 
     @staticmethod
     @app.route('/deleteContract/<address>/', methods=['DELETE'])
@@ -168,7 +186,8 @@ class ContractUtils:
         for key in data.keys():
             formData = json.loads(key)
 
-        # print(formData)
+        # Retrieving and checking the token
+        result = JWTTokenUtils.checkToken(formData['token'])
 
         Session = sessionmaker(db)  
         session = Session()
@@ -181,12 +200,13 @@ class ContractUtils:
                 if (formData['name'] != contract.Name) or (formData['functionName'] != contract.FunctionName):
                     contract.Name = formData['name']
                     contract.FunctionName = formData['functionName']
+                    contract.userId = result
                     session.commit()
 
                     return 'Contract Updated'
                 return 'Contract Already exists'
 
-        genesys = Contract(Name=formData['name'], Address=formData['address'], FunctionName=formData['functionName'])
+        genesys = Contract(Name=formData['name'], Address=formData['address'], FunctionName=formData['functionName'], userId=result)
         session.add(genesys)
 
         session.commit()

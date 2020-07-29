@@ -99,3 +99,6 @@
 
 > 23/6/20
 - Fixing the login functionality to work on refresh by saving the JWT Token in the LocalStorage
+
+> 15/7/20
+- The login functionality now returns the mnemonic stored in the db

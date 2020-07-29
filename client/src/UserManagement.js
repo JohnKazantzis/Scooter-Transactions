@@ -35,7 +35,11 @@ class UserManagement extends React.Component {
         const token = response.data.token;
         console.log(token);
 
-        this.props.getToken(token);
+        const LoginCredentials = {
+            token: token,
+            mnemonic: response.data.mnemonic
+        };
+        this.props.getCred(LoginCredentials);
         
     }
 

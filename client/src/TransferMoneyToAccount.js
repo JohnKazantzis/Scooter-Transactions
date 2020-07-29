@@ -58,7 +58,7 @@ class TransferMoneyToAccount extends React.Component {
         if(this.state.loading) {
             return (
                 <div className="TMTAloaderContainer">
-                    <div class="lds-facebook"><div></div><div></div><div></div></div>
+                    <div className="lds-facebook"><div></div><div></div><div></div></div>
                     {/* <div className="loadingComments">Your transaction is being processed. Please be patient!</div> */}
                 </div>
             );
