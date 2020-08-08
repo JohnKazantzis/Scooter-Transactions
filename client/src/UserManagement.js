@@ -29,7 +29,7 @@ class UserManagement extends React.Component {
             password: this.state.password
         }
 
-        const response = await axios.get('http://127.0.0.1:5000/login/', {headers, params});
+        const response = await axios.get('https://green-wallet.herokuapp.com/login/', {headers, params});
         console.log(response);
 
         const token = response.data.token;
@@ -52,7 +52,7 @@ class UserManagement extends React.Component {
             password: this.state.password
         }
 
-        const response = await axios.post('http://127.0.0.1:5000/createUser/', JSON.stringify(params));
+        const response = await axios.post('https://green-wallet.herokuapp.com/createUser/', JSON.stringify(params));
         console.log(response);
 
     }
@@ -67,7 +67,7 @@ class UserManagement extends React.Component {
             password: this.state.password
         }
 
-        const response = await axios.delete('http://127.0.0.1:5000/deleteUser/', { headers, params });
+        const response = await axios.delete('https://green-wallet.herokuapp.com/deleteUser/', { headers, params });
         console.log(response);
     }
 

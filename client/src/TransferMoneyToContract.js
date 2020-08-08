@@ -19,7 +19,7 @@ class TransferMoneyToContract extends React.Component {
         }
 
 
-        const response = await axios.get('http://127.0.0.1:5000/getContracts/', {headers, params});
+        const response = await axios.get('https://green-wallet.herokuapp.com/getContracts/', {headers, params});
         console.log(response);
 
         if(response.status === 200) {
@@ -63,7 +63,7 @@ class TransferMoneyToContract extends React.Component {
         }
         console.log(JSON.stringify(params))
 
-        const response = await axios.post('http://127.0.0.1:5000/updateAddContract/', JSON.stringify(params));
+        const response = await axios.post('https://green-wallet.herokuapp.com/updateAddContract/', JSON.stringify(params));
         
         if(response.status === 200) {
             console.log(response)
@@ -77,7 +77,7 @@ class TransferMoneyToContract extends React.Component {
     deleteContract = async event => {
         event.preventDefault();
 
-        const response = await axios.delete(`http://127.0.0.1:5000/deleteContract/${this.state.address}/`);
+        const response = await axios.delete(`https://green-wallet.herokuapp.com/deleteContract/${this.state.address}/`);
 
         if(response.status === 200) {
             console.log(response)

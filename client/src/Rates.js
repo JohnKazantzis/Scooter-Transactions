@@ -18,7 +18,7 @@ class Rates extends React.Component {
         const params = { target: coin };
         const headers = {'content-type':'application/json'}
 
-        const response = await axios.get('http://127.0.0.1:5000/getExchangeRates/', {headers, params});
+        const response = await axios.get('https://green-wallet.herokuapp.com/getExchangeRates/', {headers, params});
         console.log(response);
 
         if(response.status === 200) {
