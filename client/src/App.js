@@ -16,7 +16,7 @@ import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import Carousel from 'react-elastic-carousel';
-import Spinner from 'react-bootstrap/Spinner';
+// import Spinner from 'react-bootstrap/Spinner';
 
 class App extends React.Component {
     state = {
@@ -43,7 +43,6 @@ class App extends React.Component {
         console.log('####Init 22: ', this.state.token, this.state.mnemonic);
         console.log('####Init LOCAL 22: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic")); 
         // const mnemonic = "multiply intact zone error sausage soap light prize potato limit excess subway";
-        const infuraApiKey = "97bda0faaf4b44cb87286a8c0dd98e16";
         //console.log('Mnemonic returned: ', this.state.mnemonic, localStorage.getItem('Mnemonic'), this.state.mnemonic && this.state.token);
         //const existingMnemonic = localStorage.getItem("Mnemonic");
     }
