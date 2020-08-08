@@ -126,7 +126,7 @@ class App extends React.Component {
         }
         
         // const response = await axios.get('http://127.0.0.1:5000/checkToken/', {headers, params});
-        const response = await axios.get('http://green-wallet.herokuapp.com/checkToken/', {headers, params});
+        const response = await axios.get('https://green-wallet.herokuapp.com/checkToken/', {headers, params});
         console.log(response);
         
         if(response.data === 1) {
