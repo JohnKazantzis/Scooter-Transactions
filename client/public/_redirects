@@ -1,1 +1,2 @@
 /api/*  https://green-wallet.herokuapp.com/checkToken/:splat  200
+/api/*  https://green-wallet.herokuapp.com/login/:splat  200

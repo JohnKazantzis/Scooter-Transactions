@@ -120,6 +120,7 @@ class App extends React.Component {
         console.log('####TOKEN CHECK 11: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic"));
         
         let response = null;
+        response.data = 0;
         if(existingToken) {
             // Checking if the JWT Token is valid
             const headers = {'content-type':'application/json'}
