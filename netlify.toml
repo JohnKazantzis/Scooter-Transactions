@@ -2,6 +2,3 @@
   command = "yarn build"
   publish= "build/"
   base = "client/"
-
-[[redirects]]
-  /api/*  https://green-wallet.herokuapp.com/checkToken/:splat  200

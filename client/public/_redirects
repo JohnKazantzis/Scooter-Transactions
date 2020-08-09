@@ -1,0 +1,1 @@
+/api/*  https://green-wallet.herokuapp.com/checkToken/:splat  200
