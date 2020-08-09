@@ -119,19 +119,17 @@ class App extends React.Component {
 
         console.log('####TOKEN CHECK 11: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic"));
         
-        let response = null;
-        response.data = 0;
-        if(existingToken) {
-            // Checking if the JWT Token is valid
-            const headers = {'content-type':'application/json'}
-            const params = {
-                token: existingToken
-            }
-            
-            // const response = await axios.get('http://127.0.0.1:5000/checkToken/', {headers, params});
-            response = await axios.get('https://green-wallet.herokuapp.com/checkToken/', {headers, params});
-            console.log(response);
+
+        // Checking if the JWT Token is valid
+        const headers = {'content-type':'application/json'}
+        const params = {
+            token: existingToken
         }
+        
+        // const response = await axios.get('http://127.0.0.1:5000/checkToken/', {headers, params});
+        response = await axios.get('https://green-wallet.herokuapp.com/checkToken/', {headers, params});
+        console.log(response);
+
         
         if(response.data === 1) {
             this.setState({ token: existingToken, mnemonic: existingMnemonic });
