@@ -1,5 +1,4 @@
 import React from 'react';
-//import { Link } from "react-router-dom";
 
 class Deposit extends React.Component {
     state = {
@@ -14,6 +13,8 @@ class Deposit extends React.Component {
     }
     
     handleChange = event => {
+        // Function that saves the new values of the form inputs
+        // to the react state
         if(event.target.name === 'cardNumber') {
             this.setState({cardNumber: event.target.value});
         }
@@ -36,16 +37,14 @@ class Deposit extends React.Component {
     }
 
     handleSubmit = async event => {
-        console.log('Deposit Submitted')
-
         event.preventDefault();
 
         // Getting web3 instance and accounts
         const web3 = this.props.instance;
         const accounts = await web3.eth.getAccounts();
 
-        // Converting Ether to Wei
-        let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'ether');
+        // Converting Finney to Wei
+        let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'finney');
 
         // Start Loading
         this.setState({ loading: true });
@@ -57,14 +56,8 @@ class Deposit extends React.Component {
             value: ammountInWei
         });
 
-        // Get Wallet Balance
         let walletBalance = await web3.eth.getBalance(accounts[0]);
-        walletBalance = web3.utils.fromWei(walletBalance);
-        console.log(walletBalance);
-
-        let walletBalance1 = await web3.eth.getBalance(accounts[1]);
-        walletBalance1 = web3.utils.fromWei(walletBalance1);
-        console.log(walletBalance1);
+        walletBalance = web3.utils.fromWei(walletBalance, 'finney');
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);
@@ -92,7 +85,7 @@ class Deposit extends React.Component {
                     </h1>
                     <form onSubmit={this.handleSubmit}>
                         <div className="inputs">
-                            <label>Amount To Deposit (ETH): </label>
+                            <label>Amount To Deposit (Finney): </label>
                             <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} />
     
                             <label>Card Number: </label>

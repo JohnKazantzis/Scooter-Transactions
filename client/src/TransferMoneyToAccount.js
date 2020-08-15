@@ -25,8 +25,8 @@ class TransferMoneyToAccount extends React.Component {
         const web3 = this.props.instance;
         const accounts = this.props.accounts;
 
-        // Converting Ether to Wei
-        let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'ether');
+        // Converting Finney to Wei
+        let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'finney');
 
         // Start Loading
         this.setState({ loading: true });
@@ -40,12 +40,7 @@ class TransferMoneyToAccount extends React.Component {
 
         // Get Wallet Balance
         let walletBalance = await web3.eth.getBalance(accounts[0]);
-        walletBalance = web3.utils.fromWei(walletBalance);
-        console.log(walletBalance);
-
-        let walletBalance1 = await web3.eth.getBalance(accounts[1]);
-        walletBalance1 = web3.utils.fromWei(walletBalance1);
-        console.log(walletBalance1);
+        walletBalance = web3.utils.fromWei(walletBalance, 'finney');
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);

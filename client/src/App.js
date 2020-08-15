@@ -16,7 +16,6 @@ import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import Carousel from 'react-elastic-carousel';
-// import Spinner from 'react-bootstrap/Spinner';
 
 class App extends React.Component {
     state = {
@@ -37,14 +36,7 @@ class App extends React.Component {
 
     componentDidMount = async () => {
         // Checking if the JWT Token is valid
-        console.log('####Init 11: ', this.state.token, this.state.mnemonic); 
-        console.log('####Init LOCAL 11: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic")); 
         this.loginCheck();
-        console.log('####Init 22: ', this.state.token, this.state.mnemonic);
-        console.log('####Init LOCAL 22: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic")); 
-        // const mnemonic = "multiply intact zone error sausage soap light prize potato limit excess subway";
-        //console.log('Mnemonic returned: ', this.state.mnemonic, localStorage.getItem('Mnemonic'), this.state.mnemonic && this.state.token);
-        //const existingMnemonic = localStorage.getItem("Mnemonic");
     }
 
     initialiseWallet = async () => {
@@ -52,20 +44,10 @@ class App extends React.Component {
 
         // Creating a rinkeby TestNet provider
         const web3 = new Web3(new HDWalletProvider(localStorage.getItem("Mnemonic"), 'https://rinkeby.infura.io/v3/'+infuraApiKey));
-
-        // let privateKey = '3B673A55CC628BEC289F98EE13BEC78C0DEEEBC74D53ADFD0028D917704D79DB';
-
-        // LOCAL NETWORK --------------------------------------------------------
-        // // Creating a localhost provider http://127.0.0.1:8545 (truffle-config.js)
-        // const provider = new Web3.providers.HttpProvider('http://127.0.0.1:8545');
-
-        // // Creating Web3 instance
-        // const web3 = new Web3(provider);
         
         // Getting accounts
         const accounts = await web3.eth.getAccounts();
         console.log(accounts);
-        // -----------------------------------------------------------------------
 
         // Getting the Network Id and the address of the deployed Contract
         const netId = await web3.eth.net.getId();
@@ -78,29 +60,16 @@ class App extends React.Component {
             contractAdrr
         );
         console.log(contractInstance);
-        
-        // // Getting Initial Contract Balance
-        // console.log('Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
-
-        // // Sending Wei
-        // let options = {
-        //     from: accounts[0],
-        //     value: 10
-        // }
-        // await contractInstance.methods.makePayment().send(options);
-
-        // // // Getting Initial Contract Balance
-        // console.log('$$$ New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
 
         // Get balance for account 0
         let walletBalance = await web3.eth.getBalance(accounts[0]);
-        walletBalance = web3.utils.fromWei(walletBalance);
-        console.log('Account[0] ' + walletBalance);
+        walletBalance = web3.utils.fromWei(walletBalance, 'finney');
+        console.log('Account[0]: ' + walletBalance);
 
         // Get balance for account 1
         let secondAccBalance = await web3.eth.getBalance(accounts[1]);
         secondAccBalance = web3.utils.fromWei(secondAccBalance);
-        console.log('Account[1] ' + secondAccBalance);
+        console.log('Account[1]: ' + secondAccBalance);
 
         // Setting the state
         this.setState({
@@ -116,20 +85,15 @@ class App extends React.Component {
         // Getting Token, if already exists
         const existingToken = localStorage.getItem("JWTtoken");
         const existingMnemonic = localStorage.getItem("Mnemonic");
-
-        console.log('####TOKEN CHECK 11: ', localStorage.getItem("JWTtoken"), localStorage.getItem("Mnemonic"));
         
-
         // Checking if the JWT Token is valid
         const headers = {'content-type':'application/json'}
         const params = {
             token: existingToken
         }
         
-        // const response = await axios.get('http://127.0.0.1:5000/checkToken/', {headers, params});
-        const response = await axios.get('https://green-wallet.herokuapp.com/checkToken/', {headers, params});
+        const response = await axios.get('https://green-wallet.herokuapp.com/checkToken/?token='+existingToken, {headers, params});
         console.log(response);
-
         
         if(response.data === 1) {
             this.setState({ token: existingToken, mnemonic: existingMnemonic });
@@ -187,7 +151,6 @@ class App extends React.Component {
                                 <span className="logoSpan"><FontAwesomeIcon icon={faCoffee} /></span>GreenWallet
                             </h1>
                             <ul>
-                                <li><a href="#balance-rates">Balance/Exchange Rates</a></li>
                                 <li><a href="#deposit">Make A Deposit</a></li>
                                 <li><a href="#transferMoney">Transfer Money</a></li>
                                 <button className="logoutButton" onClick={this.logout}> Log Out </button>
@@ -197,13 +160,13 @@ class App extends React.Component {
                             <div id="balance-rates">
                                 <div id="rates">
                                     <div>
-                                        <span>Balance:</span> {parseFloat(this.state.walletBalance).toFixed(2)} ETH
+                                        <span>Balance:</span> {parseFloat(this.state.walletBalance).toFixed(2)} Finney
                                     </div>
                                     <div>
-                                        <Rates />
-                                        {/* ETH: 1000000<br />
+                                        {/* <Rates /> */}
+                                        ETH: 1000000<br />
                                         BTC: 2000000<br />
-                                        XRP: 3000000<br /> */}
+                                        XRP: 3000000<br />
                                     </div>
                                 </div>
                             </div>
@@ -244,7 +207,6 @@ class App extends React.Component {
                 );
             }
         }
-
     }
 }
 

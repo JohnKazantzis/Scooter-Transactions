@@ -17,7 +17,12 @@ from wallet import *
 app = Flask(__name__)
 CORS(app)
 
-db_string = 'postgres://postgres:2310452227@localhost:5432/postgres'
+# Heroku test
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
+
+db_string = 'postgres://kgmoaqxdywuxvs:1b54178e406a5bfe4bd1844dd547a7f21b716b9c51a599e67aec522730fdd5bd@ec2-54-75-244-161.eu-west-1.compute.amazonaws.com:5432/df10fq7rdcekka'
 db = create_engine(db_string)
 
 
@@ -53,7 +58,11 @@ class UserUtils:
     @app.route('/checkToken/', methods=['GET'])
     def checkToken():
         data = request.args.to_dict()
+        print('####################')
+        print(data)
         token = data['token']
+
+        #print(token = request.args.get("token", None))
 
         result = JWTTokenUtils.checkToken(token)
         if result is None:
@@ -123,15 +132,15 @@ class UserUtils:
 
 class ContractUtils:
 
-    @staticmethod
-    def getLocalContracts():
-        f = open('../client/src/contracts/scooterTransactions.json')
-        data = json.load(f)
+    # @staticmethod
+    # def getLocalContracts():
+    #     f = open('../client/src/contracts/scooterTransactions.json')
+    #     data = json.load(f)
         
-        scooterTransactionsAddr = data['networks']['5777']['address']
-        print(scooterTransactionsAddr)
+    #     scooterTransactionsAddr = data['networks']['5777']['address']
+    #     print(scooterTransactionsAddr)
 
-        return scooterTransactionsAddr
+    #     return scooterTransactionsAddr
 
     @staticmethod
     @app.route('/getContracts/', methods=['GET'])
@@ -248,15 +257,13 @@ class APICalls:
 
 
 # Getting the address of the contract
-scooterTransactionsAddr = ContractUtils.getLocalContracts()
+# scooterTransactionsAddr = ContractUtils.getLocalContracts()
 
 Session = sessionmaker(db)  
 session = Session()
 
 base.metadata.create_all(db)
 
-# genesys = Contract(Name='Coffee Story', Address='address02', FunctionName='paymentFunction')
-# session.add(genesys)  
 session.commit()
 
 # users = session.query(User)
@@ -271,5 +278,6 @@ session.commit()
 
 token = JWTTokenUtils.createToken(1)
 JWTTokenUtils.checkToken(token)
-    
-app.run(debug=True)
+
+if __name__ == '__main__':    
+    app.run()
