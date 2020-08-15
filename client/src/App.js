@@ -176,7 +176,9 @@ class App extends React.Component {
                                 </div>
                             </div>
                             <div id="transferMoney">
-                                <Carousel>
+                                <Carousel easing="cubic-bezier(1,.15,.55,1.54)"
+                                          tiltEasing="cubic-bezier(0.110, 1, 1.000, 0.210)"
+                                          transitionMs={700}>
                                     <div id="transferMoneyToContract">
                                         <TransferMoneyToContract token={this.state.token} accounts={this.state.accounts} contractInstance={this.state.contractInstance} />
                                     </div>
