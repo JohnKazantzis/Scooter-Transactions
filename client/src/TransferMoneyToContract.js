@@ -7,8 +7,11 @@ class TransferMoneyToContract extends React.Component {
         address: null,
         functionName: null,
         name: null,
+        amount: null,
         existingContracts: null
     };
+
+    GETABIKEY = '1ZBVIFP43EPWIJV97N7EW6Z6JUU4AGPW1M';
 
     getExistingContracts = async () => {
         // Getting the exchange rates from the Coinlayer API
@@ -48,6 +51,8 @@ class TransferMoneyToContract extends React.Component {
             this.setState({address: event.target.value});
         }else if(event.target.name === 'functionName') {
             this.setState({functionName: event.target.value});
+        }else if(event.target.name === 'amount') {
+            this.setState({amount: event.target.value});
         }    
     }
 
@@ -91,55 +96,89 @@ class TransferMoneyToContract extends React.Component {
     submitTransaction = async event => {
         event.preventDefault();
 
-        const params = {
-            name: this.state.name,
-            functionName: this.state.functionName,
-            address: this.state.address,
-            token: this.props.token
-        }
-        console.log(JSON.stringify(params))
-
-        console.log('###Transaction Initiated###', event.target.value);
-
-        let contractInstance = this.props.contractInstance;
+        // Getting the web3 instance and the account list
+        // from the props passed by the parent component
+        const web3 = this.props.instance;
         let accounts = this.props.accounts;
         
+        // Getting ABI from etherscan so we dont have to 
+        // have every contract source code locally
+        const headers = {'content-type':'application/json'}
+        const response = await axios.get(`https://api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=${this.state.address}&apikey=${this.GETABIKEY}`, {headers});
+
+        // Creating the contract instance
+        const contractInstance = new web3.eth.Contract(
+            JSON.parse(response.data.result),
+            this.state.address
+        );
+        
         // Getting Initial Contract Balance
-        console.log('Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
+        console.log('Initial Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
+
+        // Converting Finney -> Wei
+        let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'finney');
 
         // Sending Wei
         let options = {
             from: accounts[0],
-            value: 10
+            value: ammountInWei
         }
-        // await contractInstance.methods.makePayment().send(options);
         await contractInstance.methods[this.state.functionName]().send(options);
 
-        // // Getting Initial Contract Balance
-        console.log('$$$ New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
+        // Get Wallet Balance
+        let walletBalance = await web3.eth.getBalance(accounts[0]);
+        walletBalance = web3.utils.fromWei(walletBalance, 'finney');
+
+        // Setting App cmp state
+        this.props.onBalanceChange(walletBalance += this.state.amount);
+
+        // Getting the after transaction Contract Balance
+        console.log('New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
     }
 
     submitTransactionButton = async (event, value) => {
         event.preventDefault();
+        console.log('Value: ', value)
+        console.log('Amount: ', this.state.amount)
 
-        console.log('###BUTTON Transaction Initiated###', value);
-
-        let contractInstance = this.props.contractInstance;
+        // Getting the web3 instance and the account list
+        // from the props passed by the parent component
+        const web3 = this.props.instance;
         let accounts = this.props.accounts;
         
+        // Getting ABI from etherscan so we dont have to 
+        // have every contract source code locally
+        const headers = {'content-type':'application/json'}
+        const response = await axios.get(`https://api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=${value.Address}&apikey=${this.GETABIKEY}`, {headers});
+
+        // Creating the contract instance
+        const contractInstance = new web3.eth.Contract(
+            JSON.parse(response.data.result),
+            value.Address
+        );
+        
         // Getting Initial Contract Balance
-        console.log('Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
+        console.log('Initial Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
+
+        // Converting Finney -> Wei
+        let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'finney');
 
         // Sending Wei
         let options = {
             from: accounts[0],
-            value: 10
+            value: ammountInWei
         }
-        // await contractInstance.methods.makePayment().send(options);
         await contractInstance.methods[value.FunctionName]().send(options);
 
-        // // Getting Initial Contract Balance
-        console.log('$$$ New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
+        // Get Wallet Balance
+        let walletBalance = await web3.eth.getBalance(accounts[0]);
+        walletBalance = web3.utils.fromWei(walletBalance, 'finney');
+
+        // Setting App cmp state
+        this.props.onBalanceChange(walletBalance += this.state.amount);
+
+        // Getting the after transaction Contract Balance
+        console.log('New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
     }
 
     render() {

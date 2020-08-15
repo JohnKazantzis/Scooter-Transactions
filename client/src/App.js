@@ -8,9 +8,6 @@ import TransferMoneyToAccount from './TransferMoneyToAccount';
 import TransferMoneyToContract from './TransferMoneyToContract';
 import UserManagement from './UserManagement';
 
-// Importing the Contract's artifact
-import deployedContract from './contracts/scooterTransactions.json';
-
 // Importing Css
 import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,9 +18,7 @@ class App extends React.Component {
     state = {
         web3instance: null,
         walletBalance: null,
-        contractInstance: null,
         accounts: null,
-        contractAddr: null,
         totalBalance: 0,
         paymentAmount: 0,
         token: "",
@@ -49,18 +44,6 @@ class App extends React.Component {
         const accounts = await web3.eth.getAccounts();
         console.log(accounts);
 
-        // Getting the Network Id and the address of the deployed Contract
-        const netId = await web3.eth.net.getId();
-        const contractAdrr = await deployedContract.networks[netId].address;
-        console.log('NetId', netId);
-        console.log('ContractId', contractAdrr);
-
-        const contractInstance = new web3.eth.Contract(
-            deployedContract.abi,
-            contractAdrr
-        );
-        console.log(contractInstance);
-
         // Get balance for account 0
         let walletBalance = await web3.eth.getBalance(accounts[0]);
         walletBalance = web3.utils.fromWei(walletBalance, 'finney');
@@ -73,9 +56,7 @@ class App extends React.Component {
 
         // Setting the state
         this.setState({
-            contractInstance: contractInstance,
             accounts: accounts,
-            contractAddr: contractAdrr,
             walletBalance: walletBalance,
             web3instance: web3
         });
@@ -180,10 +161,15 @@ class App extends React.Component {
                                           tiltEasing="cubic-bezier(0.110, 1, 1.000, 0.210)"
                                           transitionMs={700}>
                                     <div id="transferMoneyToContract">
-                                        <TransferMoneyToContract token={this.state.token} accounts={this.state.accounts} contractInstance={this.state.contractInstance} />
+                                        <TransferMoneyToContract token={this.state.token}
+                                                                 accounts={this.state.accounts}
+                                                                 instance={this.state.web3instance}
+                                                                 onBalanceChange={this.balanceChange} />
                                     </div>
                                     <div id="transferMoneyToAccount">
-                                        <TransferMoneyToAccount instance={this.state.web3instance} accounts={this.state.accounts} onBalanceChange={this.balanceChange} />
+                                        <TransferMoneyToAccount instance={this.state.web3instance}
+                                                                accounts={this.state.accounts}
+                                                                onBalanceChange={this.balanceChange} />
                                     </div>
                                 </Carousel>
                             </div>
