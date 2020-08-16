@@ -33,7 +33,7 @@ class TransferMoneyToAccount extends React.Component {
         // Send Money
         await web3.eth.sendTransaction({
             from: accounts[0],
-            to: accounts[1],
+            to: this.state.address,
             value: ammountInWei
         });
 

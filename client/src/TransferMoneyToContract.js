@@ -23,20 +23,18 @@ class TransferMoneyToContract extends React.Component {
 
 
         const response = await axios.get('https://green-wallet.herokuapp.com/getContracts/', {headers, params});
-        console.log(response);
 
         if(response.status === 200) {
-            console.log(response)
+            const existingContracts = Object.entries(response.data).map(([key, value]) => {
+                return <button key={value.Address} onClick={e => this.submitTransactionButton(e, value)}> {value.Name}</button>
+            });
+    
+            this.setState({ existingContracts: existingContracts});
         }
         else {
             this.setState({ error: true });
         }
 
-        const existingContracts = Object.entries(response.data).map(([key, value]) => {
-            return <button key={value.Address} onClick={e => this.submitTransactionButton(e, value)}> {value.Name}</button>
-        });
-
-        this.setState({ existingContracts: existingContracts});
     }
 
     componentDidMount = async () => {
@@ -66,12 +64,10 @@ class TransferMoneyToContract extends React.Component {
             address: this.state.address,
             token: this.props.token
         }
-        console.log(JSON.stringify(params))
 
         const response = await axios.post('https://green-wallet.herokuapp.com/updateAddContract/', JSON.stringify(params));
         
         if(response.status === 200) {
-            console.log(response)
             await this.getExistingContracts();
         }
         else {
@@ -85,7 +81,6 @@ class TransferMoneyToContract extends React.Component {
         const response = await axios.delete(`https://green-wallet.herokuapp.com/deleteContract/${this.state.address}/`);
 
         if(response.status === 200) {
-            console.log(response)
             await this.getExistingContracts();
         }
         else {
@@ -111,9 +106,6 @@ class TransferMoneyToContract extends React.Component {
             JSON.parse(response.data.result),
             this.state.address
         );
-        
-        // Getting Initial Contract Balance
-        console.log('Initial Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
 
         // Converting Finney -> Wei
         let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'finney');
@@ -131,15 +123,10 @@ class TransferMoneyToContract extends React.Component {
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);
-
-        // Getting the after transaction Contract Balance
-        console.log('New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
     }
 
     submitTransactionButton = async (event, value) => {
         event.preventDefault();
-        console.log('Value: ', value)
-        console.log('Amount: ', this.state.amount)
 
         // Getting the web3 instance and the account list
         // from the props passed by the parent component
@@ -156,9 +143,6 @@ class TransferMoneyToContract extends React.Component {
             JSON.parse(response.data.result),
             value.Address
         );
-        
-        // Getting Initial Contract Balance
-        console.log('Initial Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
 
         // Converting Finney -> Wei
         let ammountInWei = web3.utils.toWei(this.state.amount.toString(), 'finney');
@@ -176,9 +160,6 @@ class TransferMoneyToContract extends React.Component {
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);
-
-        // Getting the after transaction Contract Balance
-        console.log('New Contract Balance: ', await contractInstance.methods['totalBalance()']().call());
     }
 
     render() {

@@ -8,6 +8,9 @@ import TransferMoneyToAccount from './TransferMoneyToAccount';
 import TransferMoneyToContract from './TransferMoneyToContract';
 import UserManagement from './UserManagement';
 
+// Importing the Contract's artifact
+import deployedContract from './contracts/scooterTransactions.json';
+
 // Importing Css
 import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -42,17 +45,10 @@ class App extends React.Component {
         
         // Getting accounts
         const accounts = await web3.eth.getAccounts();
-        console.log(accounts);
 
         // Get balance for account 0
         let walletBalance = await web3.eth.getBalance(accounts[0]);
         walletBalance = web3.utils.fromWei(walletBalance, 'finney');
-        console.log('Account[0]: ' + walletBalance);
-
-        // Get balance for account 1
-        let secondAccBalance = await web3.eth.getBalance(accounts[1]);
-        secondAccBalance = web3.utils.fromWei(secondAccBalance);
-        console.log('Account[1]: ' + secondAccBalance);
 
         // Setting the state
         this.setState({
@@ -60,6 +56,8 @@ class App extends React.Component {
             walletBalance: walletBalance,
             web3instance: web3
         });
+
+        this.logHelpInfo();
     }
 
     loginCheck = async () => {
@@ -74,7 +72,6 @@ class App extends React.Component {
         }
         
         const response = await axios.get('https://green-wallet.herokuapp.com/checkToken/?token='+existingToken, {headers, params});
-        console.log(response);
         
         if(response.data === 1) {
             this.setState({ token: existingToken, mnemonic: existingMnemonic });
@@ -97,8 +94,7 @@ class App extends React.Component {
         localStorage.setItem("JWTtoken", data.token);
         localStorage.setItem("Mnemonic", data.mnemonic);
 
-        this.setState({token: data.token, mnemonic: data.mnemonic});
-        console.log('App: ', this.state.token, this.state.mnemonic);   
+        this.setState({token: data.token, mnemonic: data.mnemonic}); 
         this.initialiseWallet();     
     }
 
@@ -110,6 +106,20 @@ class App extends React.Component {
         this.setState( { loginShow: "login", loginButtonShow: "", token: "" } );
         localStorage.setItem("JWTtoken", "");
         localStorage.setItem("Mnemonic", "");
+    }
+
+    logHelpInfo = async () => {
+        // Getting the Network Id and the address of the deployed Contract
+        const netId = await this.state.web3instance.eth.net.getId();
+        const contractAdrr = await deployedContract.networks[netId].address;
+
+        // Print info
+        console.log('### Helpful information for testing ###')
+        console.log('Our wallet address: ' + this.state.accounts[0])
+        console.log('Test wallet address to send money: ' + this.state.accounts[1])
+        console.log('Test smart contract address to send money: ' + contractAdrr)
+        console.log('Test smart contract address payable function: makePayment')
+        console.log('########################################')
     }
 
     render() {

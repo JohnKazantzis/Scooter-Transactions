@@ -19,8 +19,6 @@ class UserManagement extends React.Component {
 
     handleSubmit = async event => {
         event.preventDefault();
-        console.log(this.state.username);
-        console.log(this.state.password);
 
         // Making API call to check the user's credentials
         const headers = {'content-type':'application/json'}
@@ -30,10 +28,7 @@ class UserManagement extends React.Component {
         }
 
         const response = await axios.get('https://green-wallet.herokuapp.com/login/', {headers, params});
-        console.log(response);
-
         const token = response.data.token;
-        console.log(token);
 
         const LoginCredentials = {
             token: token,
@@ -53,7 +48,6 @@ class UserManagement extends React.Component {
         }
 
         const response = await axios.post('https://green-wallet.herokuapp.com/createUser/', JSON.stringify(params));
-        console.log(response);
 
     }
 
@@ -68,7 +62,6 @@ class UserManagement extends React.Component {
         }
 
         const response = await axios.delete('https://green-wallet.herokuapp.com/deleteUser/', { headers, params });
-        console.log(response);
     }
 
     render() {
