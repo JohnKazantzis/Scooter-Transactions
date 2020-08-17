@@ -53,7 +53,7 @@ class TransferMoneyToAccount extends React.Component {
             return (
                 <div className="TMTAloaderContainer">
                     <div className="lds-facebook"><div></div><div></div><div></div></div>
-                    {/* <div className="loadingComments">Your transaction is being processed. Please be patient!</div> */}
+                    <div className="loadingComments">Your transaction is being processed. Please be patient!</div>
                 </div>
             );
         }

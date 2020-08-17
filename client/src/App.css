@@ -452,7 +452,20 @@ input:focus {
 
 
 #transferMoney .transferMoneyToContract {
-    height: 90%;
+    height: 100%;
+    width: 100%;
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+#transferMoney .transferMoneyToContractSpinner {
+    height: 70vh;
     width: 100%;
     background-color: var(--secondary-color);
     border: none;
@@ -595,14 +608,12 @@ input:focus {
 }
 
 .loadingComments {
-    transform: translateY(-100%);
-    width: 20% !important;
-    height: 20% !important;
-    margin: 0 !important;
+    margin-top: 1.5rem;
 }
 
 
 .TMTAloaderContainer {
+    margin: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -612,12 +623,23 @@ input:focus {
     
 }
 
+.TMTAloaderContainerContract {
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100% !important; 
+    height: 100% !important;
+    
+}
+
 .TMTAloaderContainer .loadingComments {
     width: 40% !important;
     height: 20% !important;
 }
 
-/* #transferMoneyToAccount div {
+#transferMoneyToAccount div {
     display: flex;
     flex-direction: column;
-} */
+}

@@ -8,7 +8,8 @@ class TransferMoneyToContract extends React.Component {
         functionName: null,
         name: null,
         amount: null,
-        existingContracts: null
+        existingContracts: null,
+        loading: false
     };
 
     GETABIKEY = '1ZBVIFP43EPWIJV97N7EW6Z6JUU4AGPW1M';
@@ -91,6 +92,9 @@ class TransferMoneyToContract extends React.Component {
     submitTransaction = async event => {
         event.preventDefault();
 
+        // Start Loading
+        this.setState({ loading: true });
+
         // Getting the web3 instance and the account list
         // from the props passed by the parent component
         const web3 = this.props.instance;
@@ -123,10 +127,16 @@ class TransferMoneyToContract extends React.Component {
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);
+
+        // Stop Loading
+        this.setState({ loading: false });
     }
 
     submitTransactionButton = async (event, value) => {
         event.preventDefault();
+
+        // Start Loading
+        this.setState({ loading: true });
 
         // Getting the web3 instance and the account list
         // from the props passed by the parent component
@@ -160,45 +170,60 @@ class TransferMoneyToContract extends React.Component {
 
         // Setting App cmp state
         this.props.onBalanceChange(walletBalance += this.state.amount);
+
+        // Stop Loading
+        this.setState({ loading: false });
     }
 
     render() {
-        if(this.state.error) {
-            return(
-                <div>
-                    <div>
-                        An Error Has Occurred!
+        if(this.state.loading) {
+            return (
+                <div className="transferMoneyToContractSpinner">
+                    <div className="TMTAloaderContainerContract">
+                        <div className="lds-facebook"><div></div><div></div><div></div></div>
+                        <div className="loadingComments">Your transaction is being processed. Please be patient!</div>
                     </div>
                 </div>
             );
         }
         else {
-            return(
-                <div className="transferMoneyToContract">
-                    <h1>Transfer Money To Contract</h1>
-                    <main>
-                        <section className="ulSection">
-                            <ul>{this.state.existingContracts}</ul>
-                        </section>
-                        <section>
-                            <form onSubmit={this.handleSubmit}>
-                                <label>Amount: </label>
-                                <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} />
-                                <label>Name: </label>
-                                <input name='name' type="text" value={this.state.value} onChange={this.handleChange} />
-                                <label>Contract Address: </label>
-                                <input name='address' type="text" value={this.state.value} onChange={this.handleChange} />
-                                <label>Payable Function: </label>
-                                <input name='functionName' type="text" value={this.state.value} onChange={this.handleChange} />
-                                <div>
-                                    <button onClick={this.submitTransaction}> Submit </button>
-                                    <button onClick={this.handleSubmit}> Save Contract </button>
-                                </div>
-                            </form>
-                        </section>
-                    </main>
-                </div>
-            );
+            if(this.state.error) {
+                return(
+                    <div>
+                        <div>
+                            An Error Has Occurred!
+                        </div>
+                    </div>
+                );
+            }
+            else {
+                return(
+                    <div className="transferMoneyToContract">
+                        <h1>Transfer Money To Contract</h1>
+                        <main>
+                            <section className="ulSection">
+                                <ul>{this.state.existingContracts}</ul>
+                            </section>
+                            <section>
+                                <form onSubmit={this.handleSubmit}>
+                                    <label>Amount: </label>
+                                    <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} />
+                                    <label>Name: </label>
+                                    <input name='name' type="text" value={this.state.value} onChange={this.handleChange} />
+                                    <label>Contract Address: </label>
+                                    <input name='address' type="text" value={this.state.value} onChange={this.handleChange} />
+                                    <label>Payable Function: </label>
+                                    <input name='functionName' type="text" value={this.state.value} onChange={this.handleChange} />
+                                    <div>
+                                        <button onClick={this.submitTransaction}> Submit </button>
+                                        <button onClick={this.handleSubmit}> Save Contract </button>
+                                    </div>
+                                </form>
+                            </section>
+                        </main>
+                    </div>
+                );
+            }
         }
     }
 }
