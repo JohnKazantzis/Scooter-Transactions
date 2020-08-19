@@ -72,8 +72,8 @@ class Deposit extends React.Component {
                 <div>
                     <div className="loaderContainer">
                         <div className="lds-facebook"><div></div><div></div><div></div></div>
-                    </div>
                         <div className="loadingComments">Your transaction is being processed. Please be patient!</div>
+                    </div>
                 </div>
             );
         }
