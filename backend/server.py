@@ -22,7 +22,7 @@ CORS(app)
 def index():
     return "<h1>Welcome to our server !!</h1>"
 
-db_string = 'postgres://kgmoaqxdywuxvs:1b54178e406a5bfe4bd1844dd547a7f21b716b9c51a599e67aec522730fdd5bd@ec2-54-75-244-161.eu-west-1.compute.amazonaws.com:5432/df10fq7rdcekka'
+db_string = 'postgres://ihqfpqjelgtxop:387b41a1f4b9332ff800f5d6cb9a786ba6b0d6402ea9d24fdc2c2cbec5069ce4@ec2-3-248-4-172.eu-west-1.compute.amazonaws.com:5432/d9isbfunrbk25g'
 db = create_engine(db_string)
 
 
