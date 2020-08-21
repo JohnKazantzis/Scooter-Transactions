@@ -9,7 +9,8 @@ class Deposit extends React.Component {
         expYear: null,
         CVV2CVC2: null,
         value: undefined,
-        loading: false
+        loading: false,
+        amountInEuros: ""
     }
     
     handleChange = event => {
@@ -32,6 +33,18 @@ class Deposit extends React.Component {
         }
         else if(event.target.name === 'amount') {
             this.setState({amount: event.target.value});
+
+            if(event.target.value) {
+                const web3 = this.props.instance;
+                const amountInWei = web3.utils.toWei(event.target.value.toString(), 'finney');
+                const amountInEth = web3.utils.fromWei(amountInWei);
+                const amountToDisplay = amountInEth * this.props.ethRate;
+
+                this.setState({amountInEuros: amountToDisplay});
+            }
+            else {
+                this.setState({amountInEuros: ""});
+            }
         }
         
     }
@@ -87,6 +100,9 @@ class Deposit extends React.Component {
                         <div className="inputs">
                             <label>Amount To Deposit (Finney): </label>
                             <input name='amount' type="number" value={this.state.value} onChange={this.handleChange} />
+
+                            <label>Amount To Deposit (Euros): </label>
+                            <input name='amountInEuros' type="number" value={this.state.amountInEuros} readOnly />
     
                             <label>Card Number: </label>
                             <input name='cardNumber' type="text" value={this.state.value} onChange={this.handleChange} />

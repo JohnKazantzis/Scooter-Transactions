@@ -26,6 +26,7 @@ class App extends React.Component {
         paymentAmount: 0,
         token: "",
         mnemonic: "",
+        ethRate: 350,
         loggedIn: false,
         loginShow: "login",
         loginButtonShow: "",
@@ -87,6 +88,10 @@ class App extends React.Component {
 
     balanceChange = (balance) => {
         this.setState({walletBalance: balance});
+    }
+
+    getEthRate = (ethRate) => {
+        this.setState({ethRate: ethRate});
     }
 
     getCred = data => {
@@ -154,16 +159,18 @@ class App extends React.Component {
                                         <span>Balance:</span> {parseFloat(this.state.walletBalance).toFixed(2)} Finney
                                     </div>
                                     <div>
-                                        {/* <Rates /> */}
-                                        ETH: 1000000<br />
-                                        BTC: 2000000<br />
-                                        XRP: 3000000<br />
+                                        {/* <Rates onEthRateChange={this.getEthRate} /> */}
+                                        ETH: 350<br />
+                                        BTC: 2000<br />
+                                        XRP: 3<br />
                                     </div>
                                 </div>
                             </div>
                             <div id="deposit">
                                 <div className="cardDetails">
-                                    <Deposit instance={this.state.web3instance} onBalanceChange={this.balanceChange} />
+                                    <Deposit instance={this.state.web3instance}
+                                             onBalanceChange={this.balanceChange}
+                                             ethRate={this.state.ethRate} />
                                 </div>
                             </div>
                             <div id="transferMoney">

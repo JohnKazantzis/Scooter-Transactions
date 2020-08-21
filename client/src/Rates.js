@@ -26,6 +26,8 @@ class Rates extends React.Component {
                 BTC: response.data.BTC,
                 XRP: response.data.XRP
             });
+
+            this.props.onEthRateChange(response.data.ETH);
         }
         else {
             this.setState({ error: true });
