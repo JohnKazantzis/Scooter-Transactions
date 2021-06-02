@@ -89,7 +89,7 @@ Twisted==17.9.0
 two1==3.10.9
 ufw==0.36
 unattended-upgrades==0.1
-urllib3==1.25.8
+urllib3==1.26.5
 wcwidth==0.2.5
 websocket-client==0.57.0
 Werkzeug==1.0.1
